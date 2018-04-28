@@ -105,3 +105,10 @@ tags
 
 # vim-themis local dir
 vim-themis
+
+# From deoplete
+.pytest_cache
+.mypy_cache
+doc/tags
+*.py[cod]
+.cache

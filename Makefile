@@ -3,8 +3,13 @@
 ################################################################################
 # BINARIES
 ################################################################################
-PIP=pip3
+FLAKE8=flake8
+MYPY=mypy
 NEOVIM=nvim
+PIP=pip3
+PYTEST=pytest
+THEMIS=./vim-themis/bin/themis
+VINT=vint
 
 ################################################################################
 # PATHS
@@ -25,9 +30,8 @@ DST_PYTHON3_PLUGIN=$(abspath $(NVIM_CONFIG_PYTHON3_PLUGINS)/$(NVIM_PLUGIN_NAME))
 NVIM_PLUGIN_NAME=remote
 
 ################################################################################
-# THEMIS
+# THEMIS CONFIG
 ################################################################################
-PATH := ./vim-themis/bin:$(PATH)
 export THEMIS_VIM := $(NEOVIM)
 export THEMIS_ARGS := -e -s --headless
 export THEMIS_HOME := ./vim-themis
@@ -44,13 +48,13 @@ dev-deps:
 	@$(PIP) install -r "$(PYTHON_DEV_REQUIREMENTS_FILE)"
 
 lint:
-	vint --version
-	vint plugin
-	vint autoload
-	flake8 --version
-	flake8 rplugin/python3/remote
-	mypy --version
-	mypy --silent-imports rplugin/python3/remote
+	$(VINT) --version
+	$(VINT) plugin
+	$(VINT) autoload
+	$(FLAKE8) --version
+	$(FLAKE8) $(SRC_PYTHON3_PLUGIN)
+	$(MYPY) --version
+	$(MYPY) --silent-imports $(SRC_PYTHON3_PLUGIN)
 
 install: _install update
 _install:
@@ -66,11 +70,11 @@ update:
 	@echo "Finished updating remote plugins!"
 
 test:
-	themis --version
-	themis test/autoload/*
-	pytest --version
-	pytest
+	#$(THEMIS) --version
+	#$(THEMIS) test/autoload/*
+	$(PYTEST) --version
+	$(PYTEST)
 
 vim-themis:
-	git clone https://github.com/thinca/vim-themis vim-themis
+	@git clone https://github.com/thinca/vim-themis vim-themis
 
