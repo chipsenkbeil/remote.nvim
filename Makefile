@@ -8,6 +8,7 @@ MYPY=mypy
 NEOVIM=nvim
 PIP=pip3
 PYTEST=pytest
+PYTEST_COV=py.test --cov=$(NVIM_PLUGIN_NAME)
 THEMIS=./vim-themis/bin/themis
 VINT=vint
 
@@ -74,6 +75,7 @@ test:
 	#$(THEMIS) test/autoload/*
 	$(PYTEST) --version
 	$(PYTEST)
+	$(PYTEST_COV) test/
 
 vim-themis:
 	@git clone https://github.com/thinca/vim-themis vim-themis

@@ -22,7 +22,6 @@ class RemoteHandlers(object):
         self.nvim.current.line = ('RemoteListen with args: {}, range: {}'
                                   .format(args, range))
 
-    @neovim.autocmd('BufWrite', pattern='*', eval='expand("<afile>")', sync=True)
+    @neovim.autocmd('BufWrite', pattern='*', eval='expand("<afile>")', sync=False)
     def on_bufwrite(self, filename):
         self.nvim.out_write('Writing to ' + filename)
-
