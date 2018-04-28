@@ -65,6 +65,7 @@ _install:
 
 uninstall:
 	@rm "$(DST_PYTHON3_PLUGIN)"
+	$(info Removed symlink $(DST_PYTHON3_PLUGIN))
 
 update:
 	@$(NEOVIM) +UpdateRemotePlugins +qa

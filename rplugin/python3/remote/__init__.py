@@ -5,7 +5,8 @@
 # =============================================================================
 
 import neovim
-
+from remote.client import RemoteClient
+from remote.server import RemoteServer
 
 @neovim.plugin
 class RemoteHandlers(object):
@@ -14,14 +15,17 @@ class RemoteHandlers(object):
 
     @neovim.command('RemoteConnect', nargs='*', range='')
     def cmd_remote_connect(self, args, range):
-        self.nvim.current.line = ('RemoteConnect with args: {}, range: {}'
-                                  .format(args, range))
+        self.nvim.out_write(('RemoteConnect with args: {}, range: {}'
+                             .format(args, range)))
 
     @neovim.command('RemoteListen', nargs='*', range='')
     def cmd_remote_listen(self, args, range):
-        self.nvim.current.line = ('RemoteListen with args: {}, range: {}'
-                                  .format(args, range))
+        self.nvim.out_write(('RemoteListen with args: {}, range: {}'
+                             .format(args, range)))
 
-    @neovim.autocmd('BufWrite', pattern='*', eval='expand("<afile>")', sync=False)
+    @neovim.autocmd('BufWrite',
+                    pattern='*',
+                    eval='expand("<afile>")',
+                    sync=False)
     def on_bufwrite(self, filename):
         self.nvim.out_write('Writing to ' + filename)
