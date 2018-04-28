@@ -102,3 +102,6 @@ ENV/
 
 # vim ctags file
 tags
+
+# vim-themis local dir
+vim-themis
