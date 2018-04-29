@@ -1,9 +1,11 @@
 import asyncio
-from asyncio import DatagramProtocol
+from asyncio import DatagramProtocol, wait_for
 
 
 class RemoteClient:
-    def __init__(self, addr, port, key=None):
+    def __init__(self, nvim, addr, port, key=None):
+        self.nvim = nvim
+
         self.info = {}
         self.info['addr'] = addr
         self.info['port'] = port
@@ -13,27 +15,48 @@ class RemoteClient:
         self.transport = None
         self.protocol = None
 
-    def run(self):
+    def is_running(self):
+        return self.transport is not None
+
+    def send(self, data):
+        if (not self.is_running()):
+            raise Exception('Client is not running or connected!')
+
+        self.transport.sendto(data.encode())
+        self.nvim.out_write('Sent "{}"\n'.format(data))
+
+    def run(self, cb):
+        """Starts the remote client, adding it to the event loop and running
+           forever if the loop has not been started elsewhere. If the loop is
+           already running, this will only add the datagram endpoint to the
+           loop.
+
+        :param cb: The callback to invoke when the client is ready
+        """
+        self.nvim.out_write('Here\n')
         self.loop = asyncio.get_event_loop()
-        listen = self.loop.create_datagram_endpoint(
-            RemoteClientProtocol,
-            local_addr=(self.info['addr'], self.info['port'])
+        connect = self.loop.create_datagram_endpoint(
+            lambda: RemoteClientProtocol(self.nvim),
+            remote_addr=(self.info['addr'], self.info['port'])
         )
-        transport, protocol = self.loop.run_until_complete(listen)
-        self.transport = transport
-        self.protocol = protocol
 
-        try:
-            self.loop.run_forever()
-        except KeyboardInterrupt:
-            pass
+        def ready(future):
+            transport, protocol = future.result()
+            self.transport = transport
+            self.protocol = protocol
 
-        self.transport.close()
-        self.loop.close()
+            err = None
+            if (transport is None or protocol is None):
+                err = Exception('Failed to connect to {}:{}'
+                                .format(self.info['addr'], self.info['port']))
+            cb(err)
+
+        self.loop.create_task(connect).add_done_callback(ready)
 
 
 class RemoteClientProtocol(DatagramProtocol):
-    def __init__(self):
+    def __init__(self, nvim):
+        self.nvim = nvim
         self.transport = None
 
     def connection_made(self, transport):
