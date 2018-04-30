@@ -1,10 +1,12 @@
 import asyncio
-from asyncio import DatagramProtocol, wait_for
+from asyncio import DatagramProtocol
+from remote import logger
 
 
-class RemoteClient:
+class RemoteClient(logger.LoggingMixin):
     def __init__(self, nvim, addr, port, key=None):
         self.nvim = nvim
+        self.is_debug_enabled = True
 
         self.info = {}
         self.info['addr'] = addr
@@ -54,14 +56,17 @@ class RemoteClient:
         self.loop.create_task(connect).add_done_callback(ready)
 
 
-class RemoteClientProtocol(DatagramProtocol):
+class RemoteClientProtocol(DatagramProtocol, logger.LoggingMixin):
     def __init__(self, nvim):
         self.nvim = nvim
+        self.is_debug_enabled = True
         self.transport = None
 
     def connection_made(self, transport):
         self.transport = transport
-        print('Established connection to %s' % (transport))
+        self.nvim.async_call(lambda nvim, transport: nvim.out_write(
+            'Established connection to %s\n' % transport),
+            self.nvim, transport)
 
     def connection_lost(self, exc):
         self.transport = None
@@ -70,4 +75,6 @@ class RemoteClientProtocol(DatagramProtocol):
         # If no transport, drop the message
         if (self.transport is not None):
             msg = data.decode()
-            print('Received %r from %s' % (msg, addr))
+            self.info('New data: %s' % msg)
+            self.nvim.async_call(lambda nvim, msg: nvim.out_write(
+                'Received %s\n' % msg), self.nvim, msg)

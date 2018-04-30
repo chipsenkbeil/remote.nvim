@@ -8,13 +8,23 @@ import neovim
 from remote.client import RemoteClient
 from remote.server import RemoteServer
 from remote.utils import is_int, to_int
+from remote import logger
+
 
 @neovim.plugin
-class RemoteHandlers(object):
+class RemoteHandlers(logger.LoggingMixin):
     def __init__(self, nvim):
         self.nvim = nvim
         self.client = None
         self.server = None
+
+        # TODO: Add logging variables to enable globally
+        self.is_debug_enabled = True
+        logger.setup(
+            nvim,
+            level='DEBUG',
+            output_file='remote.log'
+        )
 
     @neovim.command('RemoteSend', nargs='*', range='')
     def cmd_remote_send(self, args, range):
