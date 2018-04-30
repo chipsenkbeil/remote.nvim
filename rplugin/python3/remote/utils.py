@@ -1,3 +1,9 @@
+# =============================================================================
+# FILE: utils.py
+# AUTHOR: Chip Senkbeil <chip.senkbeil at gmail.com>
+# License: Apache 2.0 License
+# =============================================================================
+
 
 def to_int(s, default=None):
     """Attempts to convert the provided string to an integer.

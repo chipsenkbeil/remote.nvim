@@ -1,3 +1,8 @@
+# =============================================================================
+# FILE: client.py
+# AUTHOR: Chip Senkbeil <chip.senkbeil at gmail.com>
+# License: Apache 2.0 License
+# =============================================================================
 import asyncio
 from asyncio import DatagramProtocol
 from remote import logger
