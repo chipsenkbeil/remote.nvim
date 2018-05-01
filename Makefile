@@ -40,7 +40,7 @@ export THEMIS_HOME := ./vim-themis
 ################################################################################
 # RULES
 ################################################################################
-all: deps install update
+all: deps install
 
 deps:
 	@$(PIP) install -r "$(PYTHON_REQUIREMENTS_FILE)"
