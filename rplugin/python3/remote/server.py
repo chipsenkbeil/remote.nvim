@@ -56,6 +56,13 @@ class RemoteServer(logger.LoggingMixin):
 
         self.loop.create_task(listen).add_done_callback(ready)
 
+    def stop(self):
+        """Stops the remote server, removing it from the event loop."""
+        if (self.transport is not None):
+            self.transport.close()
+            self.transport = None
+        self.protocol = None
+
 
 class RemoteServerProtocol(DatagramProtocol, logger.LoggingMixin):
     def __init__(self, nvim):

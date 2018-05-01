@@ -30,8 +30,17 @@ class RemoteHandlers(logger.LoggingMixin):
     def cmd_remote_send(self, args, range):
         if (self.client is not None):
             self.client.send(' '.join(args))
-        elif (self.server is not None):
+        if (self.server is not None):
             self.server.send(' '.join(args[1:]), args[0])
+
+    @neovim.command('RemoteStop', nargs='*', range='')
+    def cmd_remote_stop(self, args, range):
+        if (self.client is not None):
+            self.client.stop()
+            self.client = None
+        if (self.server is not None):
+            self.server.stop()
+            self.server = None
 
     @neovim.command('RemoteConnect', nargs='*', range='')
     def cmd_remote_connect(self, args, range):

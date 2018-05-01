@@ -40,7 +40,6 @@ class RemoteClient(logger.LoggingMixin):
 
         :param cb: The callback to invoke when the client is ready
         """
-        self.nvim.out_write('Here\n')
         self.loop = asyncio.get_event_loop()
         connect = self.loop.create_datagram_endpoint(
             lambda: RemoteClientProtocol(self.nvim),
@@ -59,6 +58,13 @@ class RemoteClient(logger.LoggingMixin):
             cb(err)
 
         self.loop.create_task(connect).add_done_callback(ready)
+
+    def stop(self):
+        """Stops the remote client, removing it from the event loop."""
+        if (self.transport is not None):
+            self.transport.close()
+            self.transport = None
+        self.protocol = None
 
 
 class RemoteClientProtocol(DatagramProtocol, logger.LoggingMixin):
