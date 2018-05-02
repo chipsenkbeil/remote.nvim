@@ -244,7 +244,7 @@ class Metadata(object):
 
     @staticmethod
     def encode(obj):
-        if (isinstance(obj, Content)):
+        if (isinstance(obj, Metadata)):
             d = {}
             d[Metadata.name()] = True
             d['_data'] = obj._data
