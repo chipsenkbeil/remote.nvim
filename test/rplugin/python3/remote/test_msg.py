@@ -1,10 +1,222 @@
 import pytest
 import msgpack
 import datetime
+from hmac import HMAC
 from remote.msg import *
 
-class TestHeader(object):
 
+@pytest.fixture()
+def message(header, parent_header, metadata, content):
+    return (Message()
+            .set_header(header)
+            .set_parent_header(parent_header)
+            .set_metadata(metadata)
+            .set_content(content))
+
+
+@pytest.fixture()
+def header():
+    d = datetime.strptime('1990-04-27', '%Y-%m-%d')
+    return (Header()
+            .set_msg_id('12345')
+            .set_username('senkwich')
+            .set_session('mysession')
+            .set_date(d)
+            .set_msg_type('some_type')
+            .set_version('1.0'))
+
+
+@pytest.fixture()
+def parent_header():
+    d = datetime.strptime('1990-04-27', '%Y-%m-%d')
+    return (Header()
+            .set_msg_id('12345')
+            .set_username('senkwich')
+            .set_session('mysession')
+            .set_date(d)
+            .set_msg_type('some_type')
+            .set_version('1.0'))
+
+
+@pytest.fixture()
+def metadata():
+    return Metadata().set_value('key', 'value')
+
+
+@pytest.fixture()
+def content():
+    return Content().set_data(999)
+
+
+class TestMessage(object):
+    def test_encode_passed_Message(self, message):
+        assert True == False
+
+    def test_encode_passed_Header(self, header):
+        assert True == False
+
+    def test_encode_passed_Metadata(self, metadata):
+        assert True == False
+
+    def test_encode_passed_Content(self, content):
+        assert True == False
+
+    def test_encode_passed_normal_value(self):
+        assert True == False
+
+    def test_decode_passed_encoded_Message(self, message):
+        assert True == False
+
+    def test_decode_passed_encoded_Header(self, header):
+        assert True == False
+
+    def test_decode_passed_encoded_Metadata(self, metadata):
+        assert True == False
+
+    def test_decode_passed_encoded_Content(self, content):
+        assert True == False
+
+    def test_decode_passed_encoded_normal_value(self):
+        assert True == False
+
+    def test_set_header_not_Header(self):
+        with pytest.raises(AssertionError):
+            Message().set_header(12345)
+
+    def test_set_header_already_set(self, header):
+        with pytest.raises(AssertionError):
+            Message().set_header(header).set_header(header)
+
+    def test_set_header_success(self, header):
+        assert Message().set_header(header).get_header() == header
+
+    def test_set_parent_header_not_Header(self):
+        with pytest.raises(AssertionError):
+            Message().set_parent_header(12345)
+
+    def test_set_parent_header_already_set(self, parent_header):
+        with pytest.raises(AssertionError):
+            Message().set_parent_header(parent_header).set_parent_header(parent_header)
+
+    def test_set_parent_header_success(self, parent_header):
+        assert Message().set_parent_header(parent_header).get_parent_header() == parent_header
+
+    def test_set_metadata_not_Metadata(self):
+        with pytest.raises(AssertionError):
+            Message().set_metadata(12345)
+
+    def test_set_metadata_already_set(self, metadata):
+        with pytest.raises(AssertionError):
+            Message().set_metadata(metadata).set_metadata(metadata)
+
+    def test_set_metadata_success(self, metadata):
+        assert Message().set_metadata(metadata).get_metadata() == metadata
+
+    def test_set_content_not_Content(self):
+        with pytest.raises(AssertionError):
+            Message().set_content(12345)
+
+    def test_set_content_already_set(self, content):
+        with pytest.raises(AssertionError):
+            Message().set_content(content).set_content(content)
+
+    def test_set_content_success(self, content):
+        assert Message().set_content(content).get_content() == content
+
+    def test_gen_signature_hmac_None(self, header, parent_header, metadata, content):
+        m = (Message()
+             .set_header(header)
+             .set_parent_header(parent_header)
+             .set_metadata(metadata)
+             .set_content(content))
+
+        with pytest.raises(AssertionError):
+            hmac = None
+            m.gen_signature(hmac)
+
+    def test_gen_signature_header_not_set(self, parent_header, metadata, content):
+        m = (Message()
+             .set_parent_header(parent_header)
+             .set_metadata(metadata)
+             .set_content(content))
+
+        with pytest.raises(AssertionError):
+            hmac = HMAC(b'12345')
+            m.gen_signature(hmac)
+
+    def test_gen_signature_parent_header_not_set(self, header, metadata, content):
+        m = (Message()
+             .set_header(header)
+             .set_metadata(metadata)
+             .set_content(content))
+
+        with pytest.raises(AssertionError):
+            hmac = HMAC(b'12345')
+            m.gen_signature(hmac)
+
+    def test_gen_signature_metadata_not_set(self, header, parent_header, content):
+        m = (Message()
+             .set_header(header)
+             .set_parent_header(parent_header)
+             .set_content(content))
+
+        with pytest.raises(AssertionError):
+            hmac = HMAC(b'12345')
+            m.gen_signature(hmac)
+
+    def test_gen_signature_content_not_set(self, header, parent_header, metadata):
+        m = (Message()
+             .set_header(header)
+             .set_parent_header(parent_header)
+             .set_metadata(metadata))
+
+        with pytest.raises(AssertionError):
+            hmac = HMAC(b'12345')
+            m.gen_signature(hmac)
+
+    def test_gen_signature_already_generated(self, header, parent_header, metadata, content):
+        m = (Message()
+             .set_header(header)
+             .set_parent_header(parent_header)
+             .set_metadata(metadata)
+             .set_content(content))
+
+        hmac = HMAC(b'12345')
+        m.gen_signature(hmac)
+
+        with pytest.raises(AssertionError):
+            m.gen_signature(hmac)
+
+    def test_gen_signature_success(self, header, parent_header, metadata, content):
+        m = (Message()
+             .set_header(header)
+             .set_parent_header(parent_header)
+             .set_metadata(metadata)
+             .set_content(content))
+
+        hmac = HMAC(b'12345')
+        m.gen_signature(hmac)
+
+        assert m.get_signature() is not None
+
+    def test_to_dict(self, header, parent_header, metadata, content):
+        m = (Message()
+             .set_header(header)
+             .set_parent_header(parent_header)
+             .set_metadata(metadata)
+             .set_content(content))
+        m._signature = '12345'
+
+        assert m.to_dict() == {
+            'signature': '12345',
+            'header': header,
+            'parent_header': parent_header,
+            'metadata': metadata,
+            'content': content,
+        }
+
+
+class TestHeader(object):
     def test_encode_passed_Header(self):
         d = datetime.strptime('1990-04-27', '%Y-%m-%d')
         h = (Header()

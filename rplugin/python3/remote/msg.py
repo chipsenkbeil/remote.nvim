@@ -4,6 +4,7 @@
 # License: Apache 2.0 License
 # =============================================================================
 import msgpack
+from hmac import HMAC
 from uuid import uuid4
 from datetime import datetime
 from remote import security
@@ -20,11 +21,38 @@ class Message(object):
     _content = None
 
     @staticmethod
+    def name():
+        return '__message__'
+
+    @staticmethod
     def encode(obj):
+        if (isinstance(obj, Message)):
+            d = {}
+            d[Message.name()] = True
+            d['_signature'] = obj._signature
+            d['_header'] = obj._header
+            d['_parent_header'] = obj._parent_header
+            d['_metadata'] = obj._metadata
+            d['_content'] = obj._content
+            return d
+        obj = Header.encode(obj)
+        obj = Metadata.encode(obj)
+        obj = Content.encode(obj)
         return obj
 
     @staticmethod
     def decode(obj):
+        if (Message.name() in obj):
+            m = Message()
+            m._signature = obj['_signature']
+            m._header = obj['_header']
+            m._parent_header = obj['_parent_header']
+            m._metadata = obj['_metadata']
+            m._content = obj['_content']
+            return m
+        obj = Header.decode(obj)
+        obj = Metadata.decode(obj)
+        obj = Content.decode(obj)
         return obj
 
     def set_header(self, header):
@@ -55,6 +83,7 @@ class Message(object):
         return self._metadata
 
     def set_content(self, content):
+        assert isinstance(content, Content)
         assert self._content is None
         self._content = content
         return self
@@ -68,16 +97,17 @@ class Message(object):
         self._signature = self._gen_signature(hmac)
 
     def _gen_signature(self, hmac):
+        assert isinstance(hmac, HMAC)
         assert self._header is not None
         assert self._parent_header is not None
         assert self._metadata is not None
         assert self._content is not None
 
         return security.gen_signature(hmac, [
-            self._header.toBytes(),
-            self._parent_header.toBytes(),
-            self._metadata.toBytes(),
-            self._content.toBytes(),
+            self._header.to_bytes(),
+            self._parent_header.to_bytes(),
+            self._metadata.to_bytes(),
+            self._content.to_bytes(),
         ])
 
     def get_signature(self):
