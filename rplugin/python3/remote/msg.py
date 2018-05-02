@@ -136,11 +136,44 @@ class Header(object):
     _version = None
 
     @staticmethod
+    def name():
+        return '__header__'
+
+    @staticmethod
     def encode(obj):
+        if (isinstance(obj, Header)):
+            d = {}
+            d[Header.name()] = True
+            d['_msg_id'] = obj._msg_id
+            d['_username'] = obj._username
+            d['_session'] = obj._session
+            d['_date'] = obj._date
+            d['_msg_type'] = obj._msg_type
+            d['_version'] = obj._version
+            return d
+        elif (isinstance(obj, datetime)):
+            return {
+                '__datetime__': True,
+                's': obj.strftime('%Y%m%dT%H:%M:%S.%f'),
+            }
         return obj
 
     @staticmethod
     def decode(obj):
+        if (Header.name() in obj):
+            m = Header()
+            m._msg_id = obj['_msg_id']
+            m._username = obj['_username']
+            m._session = obj['_session']
+            m._date = obj['_date']
+            m._msg_type = obj['_msg_type']
+            m._version = obj['_version']
+            return m
+        elif ('__datetime__' in obj):
+            return datetime.strptime(
+                obj['s'],
+                '%Y%m%dT%H:%M:%S.%f'
+            )
         return obj
 
     def set_random_msg_id(self):
@@ -164,6 +197,15 @@ class Header(object):
 
     def get_username(self):
         return self._username
+
+    def set_session(self, session):
+        assert isinstance(session, str)
+        assert self._session is None
+        self._session = session
+        return self
+
+    def get_session(self):
+        return self._session
 
     def set_date(self, date):
         assert isinstance(date, datetime)
