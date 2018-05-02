@@ -1,3 +1,9 @@
+# =============================================================================
+# FILE: test_msg.py
+# AUTHOR: Chip Senkbeil <chip.senkbeil at gmail.com>
+# License: Apache 2.0 License
+# =============================================================================
+
 import pytest
 import msgpack
 import datetime

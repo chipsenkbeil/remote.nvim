@@ -15,6 +15,7 @@ def new_hmac_from_key(key, digestmod=sha256):
     :param digestmod: The hashlib function to use, defaulting to sha256
     :returns: The hmac instance
     """
+    assert isinstance(key, str)
     return HMAC(key.encode(), digestmod=digestmod)
 
 
