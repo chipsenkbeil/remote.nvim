@@ -2,6 +2,18 @@ import pytest
 import msgpack
 from remote.msg import *
 
+class TestHeader(object):
+    def test_encode_passed_Header(self):
+        assert True == False
+
+    def test_encode_not_passed_Header(self):
+        assert True == False
+
+    def test_decode_passed_encoded_Header(self):
+        assert True == False
+
+    def test_decode_not_passed_encoded_Header(self):
+        assert True == False
 
 class TestMetadata(object):
     def test_encode_passed_Metadata(self):
@@ -14,6 +26,19 @@ class TestMetadata(object):
         m = {'key': 'value'}
         o = Metadata.encode(m)
         assert o == m
+
+    def test_decode_passed_encoded_Metadata(self):
+        d = {}
+        d[Metadata.name()] = True
+        d['_data'] = {'key': 'value'}
+
+        m = Metadata.decode(d)
+        assert m.get_value('key') == 'value'
+
+    def test_decode_not_passed_encoded_Metadata(self):
+        c = {'key': 'value'}
+        o = Metadata.decode(c)
+        assert o == c
 
     def test_set_value_already_set(self):
         m = Metadata()
@@ -89,6 +114,19 @@ class TestContent(object):
     def test_encode_not_passed_Content(self):
         c = {'key': 'value'}
         o = Content.encode(c)
+        assert o == c
+
+    def test_decode_passed_encoded_Content(self):
+        d = {}
+        d[Content.name()] = True
+        d['_data'] = 999
+
+        c = Content.decode(d)
+        assert c.get_data() == 999
+
+    def test_decode_not_passed_encoded_Content(self):
+        c = {'key': 'value'}
+        o = Content.decode(c)
         assert o == c
 
     def test_set_data_already_set(self):
