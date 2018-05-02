@@ -50,34 +50,53 @@ def content():
 
 class TestMessage(object):
     def test_encode_passed_Message(self, message):
-        assert True == False
+        o = Message.encode(message)
+        assert o[Message.name()]
+        assert o['_signature'] == message.get_signature()
+        assert o['_header'] == message.get_header()
+        assert o['_parent_header'] == message.get_parent_header()
+        assert o['_metadata'] == message.get_metadata()
+        assert o['_content'] == message.get_content()
 
     def test_encode_passed_Header(self, header):
-        assert True == False
+        assert Message.encode(header) == Header.encode(header)
 
     def test_encode_passed_Metadata(self, metadata):
-        assert True == False
+        assert Message.encode(metadata) == Metadata.encode(metadata)
 
     def test_encode_passed_Content(self, content):
-        assert True == False
+        assert Message.encode(content) == Content.encode(content)
 
     def test_encode_passed_normal_value(self):
-        assert True == False
+        d = {'key': 'value'}
+        o = Message.encode(d)
+        assert o == d
 
     def test_decode_passed_encoded_Message(self, message):
-        assert True == False
+        e = Message.encode(message)
+        o = Message.decode(e)
+        assert o.to_dict() == message.to_dict()
 
     def test_decode_passed_encoded_Header(self, header):
-        assert True == False
+        e = Message.encode(header)
+        o = Message.decode(e)
+        assert o.to_dict() == header.to_dict()
 
     def test_decode_passed_encoded_Metadata(self, metadata):
-        assert True == False
+        e = Message.encode(metadata)
+        o = Message.decode(e)
+        assert o.to_dict() == metadata.to_dict()
 
     def test_decode_passed_encoded_Content(self, content):
-        assert True == False
+        e = Message.encode(content)
+        o = Message.decode(e)
+        assert o.to_dict() == content.to_dict()
 
     def test_decode_passed_encoded_normal_value(self):
-        assert True == False
+        d = {'key': 'value'}
+        e = Message.encode(d)
+        o = Message.decode(e)
+        assert o == d
 
     def test_set_header_not_Header(self):
         with pytest.raises(AssertionError):

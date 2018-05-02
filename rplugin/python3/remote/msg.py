@@ -50,9 +50,13 @@ class Message(object):
             m._metadata = obj['_metadata']
             m._content = obj['_content']
             return m
-        obj = Header.decode(obj)
-        obj = Metadata.decode(obj)
-        obj = Content.decode(obj)
+
+        if (isinstance(obj, dict)):
+            obj = Header.decode(obj)
+        if (isinstance(obj, dict)):
+            obj = Metadata.decode(obj)
+        if (isinstance(obj, dict)):
+            obj = Content.decode(obj)
         return obj
 
     def set_header(self, header):
