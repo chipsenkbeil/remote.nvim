@@ -19,7 +19,7 @@ SYNC_METADATA_DIRECTION_SEND = 'S'
 SYNC_METADATA_DIRECTION_RECV = 'R'
 
 
-def new(
+def new_send(
         hmac,
         username,
         session,
@@ -30,7 +30,7 @@ def new(
         length,
         parent_header=Header.empty()
 ):
-    """Creates a new sync message.
+    """Creates a new sync message to send data.
 
     :param hmac: The HMAC instance to use when generating a signature
     :param username: The name of the user sending the message
@@ -46,12 +46,13 @@ def new(
     """
     assert isinstance(username, str)
     assert isinstance(session, str)
+    assert isinstance(filename, str)
     assert isinstance(count, int) and count >= 1
     assert isinstance(index, int) and index >= 0
     assert isinstance(data, bytes)
     assert isinstance(length, int) and length >= 1
     return (Message()
-            .set_header(Header
+            .set_header(Header()
                         .set_random_msg_id()
                         .set_username(username)
                         .set_session(session)
@@ -68,6 +69,43 @@ def new(
                           .set_value(SYNC_METADATA_CHUNK_SIZE, length)
                           .set_value(SYNC_METADATA_FILENAME, filename))
             .set_content(Content().set_data(data[0:length])))
+
+
+def new_recv(
+        hmac,
+        username,
+        session,
+        filename,
+        parent_header=Header.empty()
+):
+    """Creates a new sync message to receive data.
+
+    :param hmac: The HMAC instance to use when generating a signature
+    :param username: The name of the user sending the message
+    :param session: The session associated with the message
+    :param filename: The full name of the file (including path) to sync
+    :param parent_header: Optional parent header to indicate what led to
+                          sending the message
+    :returns: The new message instance
+    """
+    assert isinstance(username, str)
+    assert isinstance(session, str)
+    assert isinstance(filename, str)
+    return (Message()
+            .set_header(Header()
+                        .set_random_msg_id()
+                        .set_username(username)
+                        .set_session(session)
+                        .set_date_now()
+                        .set_msg_type(MESSAGE_TYPE)
+                        .set_version(MESSAGE_VERSION))
+            .set_parent_header(parent_header)
+            .set_metadata(Metadata()
+                          .set_value(
+                              SYNC_METADATA_DIRECTION,
+                              SYNC_METADATA_DIRECTION_RECV)
+                          .set_value(SYNC_METADATA_FILENAME, filename))
+            .set_content(Content.empty()))
 
 
 def is_match(message):

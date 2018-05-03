@@ -334,6 +334,10 @@ class Metadata(object):
     _data = None
 
     @staticmethod
+    def empty():
+        return Metadata()
+
+    @staticmethod
     def name():
         return '__metadata__'
 
@@ -384,6 +388,10 @@ class Metadata(object):
 
 class Content(object):
     _data = None
+
+    @staticmethod
+    def empty():
+        return Content().set_data(0)
 
     @staticmethod
     def name():
