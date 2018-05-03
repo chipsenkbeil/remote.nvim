@@ -102,9 +102,37 @@ class RemoteHandlers(logger.LoggingMixin):
         self.server.run(lambda err: self.nvim.out_write(
             'Listening on {}:{}!\n'.format(addr, port)))
 
-    @neovim.autocmd('BufWrite',
+    @neovim.autocmd('BufWritePost',
                     pattern='*',
                     eval='expand("<afile>")',
                     sync=False)
-    def on_bufwrite(self, filename):
-        self.nvim.out_write('Writing to ' + filename + "\n")
+    def on_bufwritepost(self, filename):
+        self._on_fileupdate(filename)
+
+    @neovim.autocmd('FilterWritePost',
+                    pattern='*',
+                    eval='expand("<afile>")',
+                    sync=False)
+    def on_filterwritepost(self, filename):
+        self._on_fileupdate(filename)
+
+    @neovim.autocmd('FileAppendPost',
+                    pattern='*',
+                    eval='expand("<afile>")',
+                    sync=False)
+    def on_fileappendpost(self, filename):
+        self._on_fileupdate(filename)
+
+    @neovim.autocmd('FileWritePost',
+                    pattern='*',
+                    eval='expand("<afile>")',
+                    sync=False)
+    def on_filewritepost(self, filename):
+        self._on_fileupdate(filename)
+
+    def _on_fileupdate(self, filename):
+        """Kicks off a sync with the remote server to update the file.
+
+        :param filename: The full path to the file relative to neovim
+        """
+        self.nvim.out_write('Updated ' + filename + '\n')

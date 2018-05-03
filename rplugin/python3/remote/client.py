@@ -6,6 +6,7 @@
 import asyncio
 from asyncio import DatagramProtocol
 from remote import logger
+from remote.msg import Message
 
 
 class RemoteClient(logger.LoggingMixin):
@@ -85,7 +86,14 @@ class RemoteClientProtocol(DatagramProtocol, logger.LoggingMixin):
     def datagram_received(self, data, addr):
         # If no transport, drop the message
         if (self.transport is not None):
-            msg = data.decode()
-            self.info('New data: %s' % msg)
-            self.nvim.async_call(lambda nvim, msg: nvim.out_write(
-                'Received %s\n' % msg), self.nvim, msg)
+            message = None
+
+            try:
+                message = Message.read(data)
+                self.transport.sendto(message.to_bytes(), addr)
+                self.info('New data: %s' % message)
+                self.nvim.async_call(lambda nvim, msg, addr: nvim.out_write(
+                    'Received %r from %s\n' % (msg, addr)), self.nvim, message, addr)
+            except Exception as ex:
+                self.nvim.async_call(lambda nvim, ex: nvim.err_write(
+                    'Exception %s\n' % ex), self.nvim, ex)

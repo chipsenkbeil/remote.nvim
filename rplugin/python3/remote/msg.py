@@ -32,6 +32,20 @@ class Message(object):
         return '__message__'
 
     @staticmethod
+    def read(obj):
+        """Reads the content into a new message.
+
+        :param obj: The content to read
+        :returns: A new message instance, or None if not valid type
+        """
+        m = None
+
+        if (isinstance(obj, bytes)):
+            m = Message().from_bytes(obj)
+
+        return m
+
+    @staticmethod
     def encode(obj):
         if (isinstance(obj, Message)):
             d = {}
