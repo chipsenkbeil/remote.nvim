@@ -9,8 +9,15 @@ from uuid import uuid4
 from datetime import datetime
 from remote import security
 
-# Maximum UDP datagram size is 65,507
-MAX_CONTENT_SIZE = 40000
+# Maximum UDP datagram size for IPv4 is 65,507 bytes
+MAX_MESSAGE_SIZE = 65507
+
+# Below is 60 KiB bytes limit for content to ensure
+# we have plenty of room for the header and metadata
+MAX_CONTENT_SIZE = 61440  # 60 KiB (~3.97 KiB of bytes for header)
+
+# Represents the version of messages supported
+MESSAGE_VERSION = '0.1'
 
 
 class Message(object):
@@ -170,6 +177,15 @@ class Header(object):
     _version = None
 
     @staticmethod
+    def empty():
+        return (Header()
+                .set_msg_id('')
+                .set_username('')
+                .set_date_now()
+                .set_msg_type('')
+                .set_version(''))
+
+    @staticmethod
     def name():
         return '__header__'
 
@@ -240,6 +256,9 @@ class Header(object):
 
     def get_session(self):
         return self._session
+
+    def set_date_now(self):
+        self.set_date(datetime.now())
 
     def set_date(self, date):
         assert isinstance(date, datetime)
