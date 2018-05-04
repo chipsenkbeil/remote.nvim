@@ -65,6 +65,8 @@ def test_new_sets_parent_header():
         parent_header=expected,
     )
 
+    assert m.get_parent_header() == expected
+
 
 def test_is_match_cmd():
     m = Message().set_header(Header().set_msg_type(cmd.MESSAGE_TYPE))
