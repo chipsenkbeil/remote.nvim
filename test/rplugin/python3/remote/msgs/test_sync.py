@@ -7,19 +7,6 @@ from remote.msg import *
 from remote.msgs import sync
 from remote.security import new_hmac_from_key
 
-# Represents the type of message
-MESSAGE_TYPE = 'SYNC'
-
-# Represent relevant sync metadata
-SYNC_METADATA_DIRECTION = 'D'
-SYNC_METADATA_CHUNK_COUNT = 'C'
-SYNC_METADATA_CHUNK_INDEX = 'I'
-SYNC_METADATA_CHUNK_SIZE = 'S'
-SYNC_METADATA_FILENAME = 'F'
-
-SYNC_METADATA_DIRECTION_SEND = 'S'
-SYNC_METADATA_DIRECTION_RECV = 'R'
-
 
 def test_new_send_sets_username():
     expected = 'senkwich'
@@ -69,7 +56,7 @@ def test_new_send_sets_filename():
         length=1,
     )
 
-    assert m.get_metadata().get_value(SYNC_METADATA_FILENAME) == expected
+    assert m.get_metadata().get_value(sync.SYNC_METADATA_FILENAME) == expected
 
 
 def test_new_send_sets_chunk_count():
@@ -86,7 +73,7 @@ def test_new_send_sets_chunk_count():
         length=1,
     )
 
-    assert m.get_metadata().get_value(SYNC_METADATA_CHUNK_COUNT) == expected
+    assert m.get_metadata().get_value(sync.SYNC_METADATA_CHUNK_COUNT) == expected
 
 
 def test_new_send_sets_chunk_index():
@@ -103,7 +90,7 @@ def test_new_send_sets_chunk_index():
         length=1,
     )
 
-    assert m.get_metadata().get_value(SYNC_METADATA_CHUNK_INDEX) == expected
+    assert m.get_metadata().get_value(sync.SYNC_METADATA_CHUNK_INDEX) == expected
 
 
 def test_new_send_sets_data():
@@ -196,7 +183,7 @@ def test_new_recv_sets_filename():
         filename=expected,
     )
 
-    assert m.get_metadata().get_value(SYNC_METADATA_FILENAME) == expected
+    assert m.get_metadata().get_value(sync.SYNC_METADATA_FILENAME) == expected
 
 
 def test_new_recv_sets_parent_header():
@@ -225,13 +212,13 @@ def test_is_match_not_sync():
 
 def test_is_direction_send_for_send():
     m = Message().set_metadata(Metadata().set_value(
-        SYNC_METADATA_DIRECTION, SYNC_METADATA_DIRECTION_SEND))
+        sync.SYNC_METADATA_DIRECTION, sync.SYNC_METADATA_DIRECTION_SEND))
     assert sync.is_direction_send(m)
 
 
 def test_is_direction_send_for_recv():
     m = Message().set_metadata(Metadata().set_value(
-        SYNC_METADATA_DIRECTION, SYNC_METADATA_DIRECTION_RECV))
+        sync.SYNC_METADATA_DIRECTION, sync.SYNC_METADATA_DIRECTION_RECV))
     assert not sync.is_direction_send(m)
 
 
@@ -242,13 +229,13 @@ def test_is_direction_send_for_nothing():
 
 def test_is_direction_recv_for_recv():
     m = Message().set_metadata(Metadata().set_value(
-        SYNC_METADATA_DIRECTION, SYNC_METADATA_DIRECTION_RECV))
+        sync.SYNC_METADATA_DIRECTION, sync.SYNC_METADATA_DIRECTION_RECV))
     assert sync.is_direction_recv(m)
 
 
 def test_is_direction_recv_for_send():
     m = Message().set_metadata(Metadata().set_value(
-        SYNC_METADATA_DIRECTION, SYNC_METADATA_DIRECTION_SEND))
+        sync.SYNC_METADATA_DIRECTION, sync.SYNC_METADATA_DIRECTION_SEND))
     assert not sync.is_direction_recv(m)
 
 
@@ -261,7 +248,7 @@ def test_get_chunk_size_for_value():
     expected = 999
 
     m = Message().set_metadata(Metadata().set_value(
-        SYNC_METADATA_CHUNK_SIZE, expected))
+        sync.SYNC_METADATA_CHUNK_SIZE, expected))
     actual = sync.get_chunk_size(m)
 
     assert actual == expected
@@ -280,7 +267,7 @@ def test_get_chunk_count_for_value():
     expected = 999
 
     m = Message().set_metadata(Metadata().set_value(
-        SYNC_METADATA_CHUNK_COUNT, expected))
+        sync.SYNC_METADATA_CHUNK_COUNT, expected))
     actual = sync.get_chunk_count(m)
 
     assert actual == expected
@@ -299,7 +286,7 @@ def test_get_chunk_index_for_value():
     expected = 999
 
     m = Message().set_metadata(Metadata().set_value(
-        SYNC_METADATA_CHUNK_INDEX, expected))
+        sync.SYNC_METADATA_CHUNK_INDEX, expected))
     actual = sync.get_chunk_index(m)
 
     assert actual == expected
@@ -318,7 +305,7 @@ def test_get_filename_for_value():
     expected = 'some file name'
 
     m = Message().set_metadata(Metadata().set_value(
-        SYNC_METADATA_FILENAME, expected))
+        sync.SYNC_METADATA_FILENAME, expected))
     actual = sync.get_filename(m)
 
     assert actual == expected
