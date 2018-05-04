@@ -77,6 +77,16 @@ def test_new_sets_parent_header():
     )
 
 
+def test_is_match_cmd():
+    m = Message().set_header(Header().set_msg_type(cmd.MESSAGE_TYPE))
+    assert cmd.is_match(m)
+
+
+def test_is_match_not_cmd():
+    m = Message().set_header(Header().set_msg_type('SOME_OTHER_TYPE'))
+    assert not cmd.is_match(m)
+
+
 def test_get_name_for_value():
     expected = 'CmdName'
 
@@ -106,7 +116,7 @@ def test_get_args_for_value():
     assert actual == expected
 
 
-def test_get_Args_for_nothing():
+def test_get_args_for_nothing():
     expected = None
 
     m = Message().set_metadata(Metadata())

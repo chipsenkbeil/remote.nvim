@@ -49,6 +49,15 @@ def new(
             .set_content(Content.empty()))
 
 
+def is_match(message):
+    """Checks if the provided message is a command.
+
+    :param message: The message to check
+    :returns: True if a command message, otherwise False
+    """
+    return message.get_header().get_msg_type() == MESSAGE_TYPE
+
+
 def get_name(message):
     """Returns the name of the command of the message.
 
