@@ -241,7 +241,7 @@ class Header(object):
         return obj
 
     def set_random_msg_id(self):
-        self.set_msg_id(uuid4())
+        self.set_msg_id(str(uuid4()))
         return self
 
     def set_msg_id(self, msg_id):
@@ -273,6 +273,7 @@ class Header(object):
 
     def set_date_now(self):
         self.set_date(datetime.now())
+        return self
 
     def set_date(self, date):
         assert isinstance(date, datetime)
