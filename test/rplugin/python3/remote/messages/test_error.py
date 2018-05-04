@@ -3,7 +3,6 @@
 # AUTHOR: Chip Senkbeil <chip.senkbeil at gmail.cop>
 # License: Apache 2.0 License
 # =============================================================================
-
 import pytest
 import msgpack
 from remote.packet import *
