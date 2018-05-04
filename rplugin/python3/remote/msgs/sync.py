@@ -44,8 +44,6 @@ def new_send(
                           sending the message
     :returns: The new message instance
     """
-    assert isinstance(username, str)
-    assert isinstance(session, str)
     assert isinstance(filename, str)
     assert isinstance(count, int) and count >= 1
     assert isinstance(index, int) and index >= 0
@@ -76,7 +74,7 @@ def new_recv(
         username,
         session,
         filename,
-        parent_header=Header.empty()
+        parent_header=Header.empty(),
 ):
     """Creates a new sync message to receive data.
 
@@ -88,8 +86,6 @@ def new_recv(
                           sending the message
     :returns: The new message instance
     """
-    assert isinstance(username, str)
-    assert isinstance(session, str)
     assert isinstance(filename, str)
     return (Message()
             .set_header(Header()
