@@ -10,14 +10,14 @@ from datetime import datetime
 from remote import security
 
 # Maximum UDP datagram size for IPv4 is 65,507 bytes
-MAX_MESSAGE_SIZE = 65507
+MAX_PACKET_SIZE = 65507
 
 # Below is 60 KiB bytes limit for content to ensure
 # we have plenty of room for the header and metadata
 MAX_CONTENT_SIZE = 61440  # 60 KiB (~3.97 KiB of bytes for header)
 
 # Represents the version of packets supported
-MESSAGE_VERSION = '0.1'
+PACKET_VERSION = '0.1'
 
 
 class Packet(object):
@@ -81,8 +81,6 @@ class Packet(object):
         return obj
 
     def set_header(self, header):
-        assert isinstance(header, Header)
-        assert self._header is None
         self._header = header
         return self
 
@@ -90,8 +88,6 @@ class Packet(object):
         return self._header
 
     def set_parent_header(self, parent_header):
-        assert isinstance(parent_header, Header)
-        assert self._parent_header is None
         self._parent_header = parent_header
         return self
 
@@ -99,8 +95,6 @@ class Packet(object):
         return self._parent_header
 
     def set_metadata(self, metadata):
-        assert isinstance(metadata, Metadata)
-        assert self._metadata is None
         self._metadata = metadata
         return self
 
@@ -108,8 +102,6 @@ class Packet(object):
         return self._metadata
 
     def set_content(self, content):
-        assert isinstance(content, Content)
-        assert self._content is None
         self._content = content
         return self
 
@@ -118,7 +110,6 @@ class Packet(object):
 
     def gen_signature(self, hmac):
         """Generates a signature for the packet based on its properties."""
-        assert self._signature is None
         self._signature = self._gen_signature(hmac)
 
     def _gen_signature(self, hmac):
@@ -245,8 +236,6 @@ class Header(object):
         return self
 
     def set_id(self, id):
-        assert isinstance(id, str)
-        assert self._id is None
         self._id = id
         return self
 
@@ -254,8 +243,6 @@ class Header(object):
         return self._id
 
     def set_username(self, username):
-        assert isinstance(username, str)
-        assert self._username is None
         self._username = username
         return self
 
@@ -263,8 +250,6 @@ class Header(object):
         return self._username
 
     def set_session(self, session):
-        assert isinstance(session, str)
-        assert self._session is None
         self._session = session
         return self
 
@@ -276,8 +261,6 @@ class Header(object):
         return self
 
     def set_date(self, date):
-        assert isinstance(date, datetime)
-        assert self._date is None
         self._date = date
         return self
 
@@ -285,8 +268,6 @@ class Header(object):
         return self._date
 
     def set_type(self, type):
-        assert isinstance(type, str)
-        assert self._type is None
         self._type = type
         return self
 
@@ -294,8 +275,6 @@ class Header(object):
         return self._type
 
     def set_version(self, version):
-        assert isinstance(version, str)
-        assert self._version is None
         self._version = version
         return self
 
@@ -428,7 +407,6 @@ class Content(object):
         return obj
 
     def set_data(self, data):
-        assert self._data is None
         self._data = data
         return self
 
