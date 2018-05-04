@@ -33,6 +33,7 @@ MESSAGE_DEFAULT_CHUNK_DATA = b''
 MESSAGE_DEFAULT_CHUNKS_RECEIVED = 0
 
 
+###############################################################################
 class FileListRequestMessage(BaseRequestMessage):
     _type = MESSAGE_TYPE_FILE_LIST
     _path = None
@@ -67,6 +68,7 @@ class FileListRequestMessage(BaseRequestMessage):
         )
 
 
+###############################################################################
 class FileListResponseMessage(BaseResponseMessage):
     _type = MESSAGE_TYPE_FILE_LIST
     _file_list = None
@@ -107,6 +109,7 @@ class FileListResponseMessage(BaseResponseMessage):
         )
 
 
+###############################################################################
 class RetrieveFileRequestMessage(BaseRequestMessage):
     _type = MESSAGE_TYPE_RETRIEVE_FILE
     _file_path = None
@@ -145,6 +148,7 @@ class RetrieveFileRequestMessage(BaseRequestMessage):
         )
 
 
+###############################################################################
 class RetrieveFileResponseMessage(BaseResponseMessage):
     _type = MESSAGE_TYPE_RETRIEVE_FILE
     _file_length = None
@@ -232,6 +236,7 @@ class RetrieveFileResponseMessage(BaseResponseMessage):
         )
 
 
+###############################################################################
 class UpdateFileStartRequestMessage(BaseRequestMessage):
     _type = MESSAGE_TYPE_UPDATE_FILE_START
     _file_path = None
@@ -283,6 +288,7 @@ class UpdateFileStartRequestMessage(BaseRequestMessage):
         )
 
 
+###############################################################################
 class UpdateFileStartResponseMessage(BaseResponseMessage):
     _type = MESSAGE_TYPE_UPDATE_FILE_START
     _file_path = None
@@ -335,6 +341,7 @@ class UpdateFileStartResponseMessage(BaseResponseMessage):
         )
 
 
+###############################################################################
 class UpdateFileDataRequestMessage(BaseRequestMessage):
     _type = MESSAGE_TYPE_UPDATE_FILE_DATA
     _file_length = None
@@ -422,6 +429,7 @@ class UpdateFileDataRequestMessage(BaseRequestMessage):
         )
 
 
+###############################################################################
 class UpdateFileDataResponseMessage(BaseResponseMessage):
     _type = MESSAGE_TYPE_UPDATE_FILE_DATA
     _file_version = None
@@ -487,6 +495,7 @@ class UpdateFileDataResponseMessage(BaseResponseMessage):
         )
 
 
+###############################################################################
 class FileChangeBroadcastMessage(BaseBroadcastMessage):
     _type = MESSAGE_TYPE_FILE_CHANGED
     _file_path = None

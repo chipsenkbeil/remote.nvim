@@ -14,6 +14,7 @@ TEST_USERNAME = 'senkwich'
 TEST_SESSION = 'mysession'
 
 
+###############################################################################
 class TestFileListRequestMessage(object):
     _class = FileListRequestMessage
     _path = 'path/to/dir'
@@ -62,6 +63,7 @@ class TestFileListRequestMessage(object):
         assert m.get_path() == self._path
 
 
+###############################################################################
 class TestFileListResponseMessage(object):
     _class = FileListResponseMessage
     _file_list = [
@@ -114,6 +116,7 @@ class TestFileListResponseMessage(object):
         assert m.get_file_list() == self._file_list
 
 
+###############################################################################
 class TestRetrieveFileRequestMessage(object):
     _class = RetrieveFileRequestMessage
     _file_path = 'path/to/file'
@@ -162,6 +165,7 @@ class TestRetrieveFileRequestMessage(object):
         assert m.get_file_path() == self._file_path
 
 
+###############################################################################
 class TestRetrieveFileResponseMessage(object):
     _class = RetrieveFileResponseMessage
     _file_length = 999
@@ -240,6 +244,7 @@ class TestRetrieveFileResponseMessage(object):
         assert m.get_chunk_data() == self._chunk_data
 
 
+###############################################################################
 class TestUpdateFileDataRequestMessage(object):
     _class = UpdateFileDataRequestMessage
     _file_length = 999
@@ -317,6 +322,7 @@ class TestUpdateFileDataRequestMessage(object):
         assert m.get_chunk_data() == self._chunk_data
 
 
+###############################################################################
 class TestUpdateFileStartRequestMessage(object):
     _class = UpdateFileStartRequestMessage
     _file_path = 'path/to/file'
@@ -373,6 +379,7 @@ class TestUpdateFileStartRequestMessage(object):
         assert m.get_file_version() == self._file_version
 
 
+###############################################################################
 class TestUpdateFileStartResponseMessage(object):
     _class = UpdateFileStartResponseMessage
     _file_path = 'path/to/file'
@@ -429,6 +436,7 @@ class TestUpdateFileStartResponseMessage(object):
         assert m.get_file_version() == self._file_version
 
 
+###############################################################################
 class TestUpdateFileDataResponseMessage(object):
     _class = UpdateFileDataResponseMessage
     _file_version = 7
@@ -492,6 +500,7 @@ class TestUpdateFileDataResponseMessage(object):
         assert m.get_chunks_received() == self._chunks_received
 
 
+###############################################################################
 class TestFileChangeBroadcastMessage(object):
     _class = FileChangeBroadcastMessage
     _file_path = 'path/to/file'
