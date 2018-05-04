@@ -1,6 +1,6 @@
 # =============================================================================
-# FILE: test_msg.py
-# AUTHOR: Chip Senkbeil <chip.senkbeil at gmail.com>
+# FILE: test_packet.py
+# AUTHOR: Chip Senkbeil <chip.senkbeil at gmail.cop>
 # License: Apache 2.0 License
 # =============================================================================
 
@@ -8,12 +8,12 @@ import pytest
 import msgpack
 import datetime
 from hmac import HMAC
-from remote.msg import *
+from remote.packet import *
 
 
 @pytest.fixture()
-def message(header, parent_header, metadata, content):
-    return (Message()
+def packet(header, parent_header, metadata, content):
+    return (Packet()
             .set_header(header)
             .set_parent_header(parent_header)
             .set_metadata(metadata)
@@ -24,11 +24,11 @@ def message(header, parent_header, metadata, content):
 def header():
     d = datetime.strptime('1990-04-27', '%Y-%m-%d')
     return (Header()
-            .set_msg_id('12345')
+            .set_id('12345')
             .set_username('senkwich')
             .set_session('mysession')
             .set_date(d)
-            .set_msg_type('some_type')
+            .set_type('some_type')
             .set_version('1.0'))
 
 
@@ -36,11 +36,11 @@ def header():
 def parent_header():
     d = datetime.strptime('1990-04-27', '%Y-%m-%d')
     return (Header()
-            .set_msg_id('12345')
+            .set_id('12345')
             .set_username('senkwich')
             .set_session('mysession')
             .set_date(d)
-            .set_msg_type('some_type')
+            .set_type('some_type')
             .set_version('1.0'))
 
 
@@ -54,102 +54,102 @@ def content():
     return Content().set_data(999)
 
 
-class TestMessage(object):
-    def test_encode_passed_Message(self, message):
-        o = Message.encode(message)
-        assert o[Message.name()]
-        assert o['_signature'] == message.get_signature()
-        assert o['_header'] == message.get_header()
-        assert o['_parent_header'] == message.get_parent_header()
-        assert o['_metadata'] == message.get_metadata()
-        assert o['_content'] == message.get_content()
+class TestPacket(object):
+    def test_encode_passed_Packet(self, packet):
+        o = Packet.encode(packet)
+        assert o[Packet.name()]
+        assert o['_signature'] == packet.get_signature()
+        assert o['_header'] == packet.get_header()
+        assert o['_parent_header'] == packet.get_parent_header()
+        assert o['_metadata'] == packet.get_metadata()
+        assert o['_content'] == packet.get_content()
 
     def test_encode_passed_Header(self, header):
-        assert Message.encode(header) == Header.encode(header)
+        assert Packet.encode(header) == Header.encode(header)
 
     def test_encode_passed_Metadata(self, metadata):
-        assert Message.encode(metadata) == Metadata.encode(metadata)
+        assert Packet.encode(metadata) == Metadata.encode(metadata)
 
     def test_encode_passed_Content(self, content):
-        assert Message.encode(content) == Content.encode(content)
+        assert Packet.encode(content) == Content.encode(content)
 
     def test_encode_passed_normal_value(self):
         d = {'key': 'value'}
-        o = Message.encode(d)
+        o = Packet.encode(d)
         assert o == d
 
-    def test_decode_passed_encoded_Message(self, message):
-        e = Message.encode(message)
-        o = Message.decode(e)
-        assert o.to_dict() == message.to_dict()
+    def test_decode_passed_encoded_Packet(self, packet):
+        e = Packet.encode(packet)
+        o = Packet.decode(e)
+        assert o.to_dict() == packet.to_dict()
 
     def test_decode_passed_encoded_Header(self, header):
-        e = Message.encode(header)
-        o = Message.decode(e)
+        e = Packet.encode(header)
+        o = Packet.decode(e)
         assert o.to_dict() == header.to_dict()
 
     def test_decode_passed_encoded_Metadata(self, metadata):
-        e = Message.encode(metadata)
-        o = Message.decode(e)
+        e = Packet.encode(metadata)
+        o = Packet.decode(e)
         assert o.to_dict() == metadata.to_dict()
 
     def test_decode_passed_encoded_Content(self, content):
-        e = Message.encode(content)
-        o = Message.decode(e)
+        e = Packet.encode(content)
+        o = Packet.decode(e)
         assert o.to_dict() == content.to_dict()
 
     def test_decode_passed_encoded_normal_value(self):
         d = {'key': 'value'}
-        e = Message.encode(d)
-        o = Message.decode(e)
+        e = Packet.encode(d)
+        o = Packet.decode(e)
         assert o == d
 
     def test_set_header_not_Header(self):
         with pytest.raises(AssertionError):
-            Message().set_header(12345)
+            Packet().set_header(12345)
 
     def test_set_header_already_set(self, header):
         with pytest.raises(AssertionError):
-            Message().set_header(header).set_header(header)
+            Packet().set_header(header).set_header(header)
 
     def test_set_header_success(self, header):
-        assert Message().set_header(header).get_header() == header
+        assert Packet().set_header(header).get_header() == header
 
     def test_set_parent_header_not_Header(self):
         with pytest.raises(AssertionError):
-            Message().set_parent_header(12345)
+            Packet().set_parent_header(12345)
 
     def test_set_parent_header_already_set(self, parent_header):
         with pytest.raises(AssertionError):
-            Message().set_parent_header(parent_header).set_parent_header(parent_header)
+            Packet().set_parent_header(parent_header).set_parent_header(parent_header)
 
     def test_set_parent_header_success(self, parent_header):
-        assert Message().set_parent_header(parent_header).get_parent_header() == parent_header
+        assert Packet().set_parent_header(parent_header).get_parent_header() == parent_header
 
     def test_set_metadata_not_Metadata(self):
         with pytest.raises(AssertionError):
-            Message().set_metadata(12345)
+            Packet().set_metadata(12345)
 
     def test_set_metadata_already_set(self, metadata):
         with pytest.raises(AssertionError):
-            Message().set_metadata(metadata).set_metadata(metadata)
+            Packet().set_metadata(metadata).set_metadata(metadata)
 
     def test_set_metadata_success(self, metadata):
-        assert Message().set_metadata(metadata).get_metadata() == metadata
+        assert Packet().set_metadata(metadata).get_metadata() == metadata
 
     def test_set_content_not_Content(self):
         with pytest.raises(AssertionError):
-            Message().set_content(12345)
+            Packet().set_content(12345)
 
     def test_set_content_already_set(self, content):
         with pytest.raises(AssertionError):
-            Message().set_content(content).set_content(content)
+            Packet().set_content(content).set_content(content)
 
     def test_set_content_success(self, content):
-        assert Message().set_content(content).get_content() == content
+        assert Packet().set_content(content).get_content() == content
 
     def test_gen_signature_hmac_None(self, header, parent_header, metadata, content):
-        m = (Message()
+        p = (Packet()
              .set_header(header)
              .set_parent_header(parent_header)
              .set_metadata(metadata)
@@ -157,82 +157,82 @@ class TestMessage(object):
 
         with pytest.raises(AssertionError):
             hmac = None
-            m.gen_signature(hmac)
+            p.gen_signature(hmac)
 
     def test_gen_signature_header_not_set(self, parent_header, metadata, content):
-        m = (Message()
+        p = (Packet()
              .set_parent_header(parent_header)
              .set_metadata(metadata)
              .set_content(content))
 
         with pytest.raises(AssertionError):
             hmac = HMAC(b'12345')
-            m.gen_signature(hmac)
+            p.gen_signature(hmac)
 
     def test_gen_signature_parent_header_not_set(self, header, metadata, content):
-        m = (Message()
+        p = (Packet()
              .set_header(header)
              .set_metadata(metadata)
              .set_content(content))
 
         with pytest.raises(AssertionError):
             hmac = HMAC(b'12345')
-            m.gen_signature(hmac)
+            p.gen_signature(hmac)
 
     def test_gen_signature_metadata_not_set(self, header, parent_header, content):
-        m = (Message()
+        p = (Packet()
              .set_header(header)
              .set_parent_header(parent_header)
              .set_content(content))
 
         with pytest.raises(AssertionError):
             hmac = HMAC(b'12345')
-            m.gen_signature(hmac)
+            p.gen_signature(hmac)
 
     def test_gen_signature_content_not_set(self, header, parent_header, metadata):
-        m = (Message()
+        p = (Packet()
              .set_header(header)
              .set_parent_header(parent_header)
              .set_metadata(metadata))
 
         with pytest.raises(AssertionError):
             hmac = HMAC(b'12345')
-            m.gen_signature(hmac)
+            p.gen_signature(hmac)
 
     def test_gen_signature_already_generated(self, header, parent_header, metadata, content):
-        m = (Message()
+        p = (Packet()
              .set_header(header)
              .set_parent_header(parent_header)
              .set_metadata(metadata)
              .set_content(content))
 
         hmac = HMAC(b'12345')
-        m.gen_signature(hmac)
+        p.gen_signature(hmac)
 
         with pytest.raises(AssertionError):
-            m.gen_signature(hmac)
+            p.gen_signature(hmac)
 
     def test_gen_signature_success(self, header, parent_header, metadata, content):
-        m = (Message()
+        p = (Packet()
              .set_header(header)
              .set_parent_header(parent_header)
              .set_metadata(metadata)
              .set_content(content))
 
         hmac = HMAC(b'12345')
-        m.gen_signature(hmac)
+        p.gen_signature(hmac)
 
-        assert m.get_signature() is not None
+        assert p.get_signature() is not None
 
     def test_to_dict(self, header, parent_header, metadata, content):
-        m = (Message()
+        p = (Packet()
              .set_header(header)
              .set_parent_header(parent_header)
              .set_metadata(metadata)
              .set_content(content))
-        m._signature = '12345'
+        p._signature = '12345'
 
-        assert m.to_dict() == {
+        assert p.to_dict() == {
             'signature': '12345',
             'header': header,
             'parent_header': parent_header,
@@ -245,19 +245,19 @@ class TestHeader(object):
     def test_encode_passed_Header(self):
         d = datetime.strptime('1990-04-27', '%Y-%m-%d')
         h = (Header()
-             .set_msg_id('12345')
+             .set_id('12345')
              .set_username('senkwich')
              .set_session('mysession')
              .set_date(d)
-             .set_msg_type('some_type')
+             .set_type('some_type')
              .set_version('1.0'))
         o = Header.encode(h)
         assert o[Header.name()]
-        assert o['_msg_id'] == h.get_msg_id()
+        assert o['_id'] == h.get_id()
         assert o['_username'] == h.get_username()
         assert o['_session'] == h.get_session()
         assert o['_date'] == h.get_date()
-        assert o['_msg_type'] == h.get_msg_type()
+        assert o['_type'] == h.get_type()
         assert o['_version'] == h.get_version()
 
     def test_encode_passed_datetime(self):
@@ -274,20 +274,20 @@ class TestHeader(object):
     def test_decode_passed_encoded_Header(self):
         d = datetime.strptime('1990-04-27', '%Y-%m-%d')
         h = (Header()
-             .set_msg_id('12345')
+             .set_id('12345')
              .set_username('senkwich')
              .set_session('mysession')
              .set_date(d)
-             .set_msg_type('some_type')
+             .set_type('some_type')
              .set_version('1.0'))
 
         encoded = {}
         encoded[Header.name()] = True
-        encoded['_msg_id'] = h.get_msg_id()
+        encoded['_id'] = h.get_id()
         encoded['_username'] = h.get_username()
         encoded['_session'] = h.get_session()
         encoded['_date'] = h.get_date()
-        encoded['_msg_type'] = h.get_msg_type()
+        encoded['_type'] = h.get_type()
         encoded['_version'] = h.get_version()
 
         new_h = Header.decode(encoded)
@@ -307,17 +307,17 @@ class TestHeader(object):
         o = Header.decode(d)
         assert o == d
 
-    def test_set_msg_id_not_string(self):
+    def test_set_id_not_string(self):
         with pytest.raises(AssertionError):
-            Header().set_msg_id(12345)
+            Header().set_id(12345)
 
-    def test_set_msg_id_already_set(self):
+    def test_set_id_already_set(self):
         with pytest.raises(AssertionError):
-            Header().set_msg_id('12345').set_msg_id('12345')
+            Header().set_id('12345').set_id('12345')
 
-    def test_set_msg_id_success(self):
+    def test_set_id_success(self):
         value = '12345'
-        assert Header().set_msg_id(value).get_msg_id() == value
+        assert Header().set_id(value).get_id() == value
 
     def test_set_username_not_string(self):
         with pytest.raises(AssertionError):
@@ -356,17 +356,17 @@ class TestHeader(object):
         value = datetime.strptime('1990-04-27', '%Y-%m-%d')
         assert Header().set_date(value).get_date() == value
 
-    def test_set_msg_type_not_string(self):
+    def test_set_type_not_string(self):
         with pytest.raises(AssertionError):
-            Header().set_msg_type(12345)
+            Header().set_type(12345)
 
-    def test_set_msg_type_already_set(self):
+    def test_set_type_already_set(self):
         with pytest.raises(AssertionError):
-            Header().set_msg_type('some_type').set_msg_type('some_type')
+            Header().set_type('some_type').set_type('some_type')
 
-    def test_set_msg_type_success(self):
+    def test_set_type_success(self):
         value = 'some_type'
-        assert Header().set_msg_type(value).get_msg_type() == value
+        assert Header().set_type(value).get_type() == value
 
     def test_set_version_not_string(self):
         with pytest.raises(AssertionError):
@@ -380,12 +380,12 @@ class TestHeader(object):
         value = '1.0'
         assert Header().set_version(value).get_version() == value
 
-    def test_to_bytes_msg_id_not_set_yet(self):
+    def test_to_bytes_id_not_set_yet(self):
         h = (Header()
              .set_username('senkwich')
              .set_session('mysession')
              .set_date(datetime.strptime('1990-04-27', '%Y-%m-%d'))
-             .set_msg_type('some_type')
+             .set_type('some_type')
              .set_version('1.0'))
 
         with pytest.raises(AssertionError):
@@ -393,10 +393,10 @@ class TestHeader(object):
 
     def test_to_bytes_username_not_set_yet(self):
         h = (Header()
-             .set_msg_id('12345')
+             .set_id('12345')
              .set_session('mysession')
              .set_date(datetime.strptime('1990-04-27', '%Y-%m-%d'))
-             .set_msg_type('some_type')
+             .set_type('some_type')
              .set_version('1.0'))
 
         with pytest.raises(AssertionError):
@@ -404,10 +404,10 @@ class TestHeader(object):
 
     def test_to_bytes_session_not_set_yet(self):
         h = (Header()
-             .set_msg_id('12345')
+             .set_id('12345')
              .set_username('senkwich')
              .set_date(datetime.strptime('1990-04-27', '%Y-%m-%d'))
-             .set_msg_type('some_type')
+             .set_type('some_type')
              .set_version('1.0'))
 
         with pytest.raises(AssertionError):
@@ -415,18 +415,18 @@ class TestHeader(object):
 
     def test_to_bytes_date_not_set_yet(self):
         h = (Header()
-             .set_msg_id('12345')
+             .set_id('12345')
              .set_username('senkwich')
              .set_session('mysession')
-             .set_msg_type('some_type')
+             .set_type('some_type')
              .set_version('1.0'))
 
         with pytest.raises(AssertionError):
             h.to_bytes()
 
-    def test_to_bytes_msg_type_not_set_yet(self):
+    def test_to_bytes_type_not_set_yet(self):
         h = (Header()
-             .set_msg_id('12345')
+             .set_id('12345')
              .set_username('senkwich')
              .set_session('mysession')
              .set_date(datetime.strptime('1990-04-27', '%Y-%m-%d'))
@@ -437,11 +437,11 @@ class TestHeader(object):
 
     def test_to_bytes_version_not_set_yet(self):
         h = (Header()
-             .set_msg_id('12345')
+             .set_id('12345')
              .set_username('senkwich')
              .set_session('mysession')
              .set_date(datetime.strptime('1990-04-27', '%Y-%m-%d'))
-             .set_msg_type('some_type'))
+             .set_type('some_type'))
 
         with pytest.raises(AssertionError):
             h.to_bytes()
@@ -449,50 +449,50 @@ class TestHeader(object):
     def test_to_bytes_everything_already_set(self):
         d = datetime.strptime('1990-04-27', '%Y-%m-%d')
         h = (Header()
-             .set_msg_id('12345')
+             .set_id('12345')
              .set_username('senkwich')
              .set_session('mysession')
              .set_date(d)
-             .set_msg_type('some_type')
+             .set_type('some_type')
              .set_version('1.0'))
 
         b = h.to_bytes()
 
         expected = {}
         expected[Header.name()] = True
-        expected['_msg_id'] = h.get_msg_id()
+        expected['_id'] = h.get_id()
         expected['_username'] = h.get_username()
         expected['_session'] = h.get_session()
         expected['_date'] = {
             '__datetime__': True,
             's': d.strftime('%Y%m%dT%H:%M:%S.%f'),
         }
-        expected['_msg_type'] = h.get_msg_type()
+        expected['_type'] = h.get_type()
         expected['_version'] = h.get_version()
         expected = msgpack.packb(expected, use_bin_type=True)
 
         assert b == expected
 
-    def test_from_bytes_msg_id_already_set(self):
+    def test_from_bytes_id_already_set(self):
         h = (Header()
-             .set_msg_id('12345')
+             .set_id('12345')
              .set_username('senkwich')
              .set_session('mysession')
              .set_date(datetime.strptime('1990-04-27', '%Y-%m-%d'))
-             .set_msg_type('some_type')
+             .set_type('some_type')
              .set_version('1.0'))
         b = h.to_bytes()
 
         with pytest.raises(AssertionError):
-            Header().set_msg_id('12345').from_bytes(b)
+            Header().set_id('12345').from_bytes(b)
 
     def test_from_bytes_username_already_set(self):
         h = (Header()
-             .set_msg_id('12345')
+             .set_id('12345')
              .set_username('senkwich')
              .set_session('mysession')
              .set_date(datetime.strptime('1990-04-27', '%Y-%m-%d'))
-             .set_msg_type('some_type')
+             .set_type('some_type')
              .set_version('1.0'))
         b = h.to_bytes()
 
@@ -501,11 +501,11 @@ class TestHeader(object):
 
     def test_from_bytes_session_already_set(self):
         h = (Header()
-             .set_msg_id('12345')
+             .set_id('12345')
              .set_username('senkwich')
              .set_session('mysession')
              .set_date(datetime.strptime('1990-04-27', '%Y-%m-%d'))
-             .set_msg_type('some_type')
+             .set_type('some_type')
              .set_version('1.0'))
         b = h.to_bytes()
 
@@ -515,37 +515,37 @@ class TestHeader(object):
     def test_from_bytes_date_already_set(self):
         d = datetime.strptime('1990-04-27', '%Y-%m-%d')
         h = (Header()
-             .set_msg_id('12345')
+             .set_id('12345')
              .set_username('senkwich')
              .set_session('mysession')
              .set_date(d)
-             .set_msg_type('some_type')
+             .set_type('some_type')
              .set_version('1.0'))
         b = h.to_bytes()
 
         with pytest.raises(AssertionError):
             Header().set_date(d).from_bytes(b)
 
-    def test_from_bytes_msg_type_already_set(self):
+    def test_from_bytes_type_already_set(self):
         h = (Header()
-             .set_msg_id('12345')
+             .set_id('12345')
              .set_username('senkwich')
              .set_session('mysession')
              .set_date(datetime.strptime('1990-04-27', '%Y-%m-%d'))
-             .set_msg_type('some_type')
+             .set_type('some_type')
              .set_version('1.0'))
         b = h.to_bytes()
 
         with pytest.raises(AssertionError):
-            Header().set_msg_type('some_type').from_bytes(b)
+            Header().set_type('some_type').from_bytes(b)
 
     def test_from_bytes_version_already_set(self):
         h = (Header()
-             .set_msg_id('12345')
+             .set_id('12345')
              .set_username('senkwich')
              .set_session('mysession')
              .set_date(datetime.strptime('1990-04-27', '%Y-%m-%d'))
-             .set_msg_type('some_type')
+             .set_type('some_type')
              .set_version('1.0'))
         b = h.to_bytes()
 
@@ -554,11 +554,11 @@ class TestHeader(object):
 
     def test_from_bytes_nothing_set_yet(self):
         h = (Header()
-             .set_msg_id('12345')
+             .set_id('12345')
              .set_username('senkwich')
              .set_session('mysession')
              .set_date(datetime.strptime('1990-04-27', '%Y-%m-%d'))
-             .set_msg_type('some_type')
+             .set_type('some_type')
              .set_version('1.0'))
         b = h.to_bytes()
 
@@ -570,41 +570,41 @@ class TestHeader(object):
     def test_to_dict(self):
         d = datetime.strptime('1990-04-27', '%Y-%m-%d')
         h = (Header()
-             .set_msg_id('12345')
+             .set_id('12345')
              .set_username('senkwich')
              .set_session('mysession')
              .set_date(d)
-             .set_msg_type('some_type')
+             .set_type('some_type')
              .set_version('1.0'))
         assert h.to_dict() == {
-            'msg_id': '12345',
+            'id': '12345',
             'username': 'senkwich',
             'session': 'mysession',
             'date': d,
-            'msg_type': 'some_type',
+            'type': 'some_type',
             'version': '1.0',
         }
 
 
 class TestMetadata(object):
     def test_encode_passed_Metadata(self):
-        m = Metadata().set_value('key', [1, 2, 3])
-        o = Metadata.encode(m)
+        p = Metadata().set_value('key', [1, 2, 3])
+        o = Metadata.encode(p)
         assert o[Metadata.name()]
         assert o['_data'] == {'key': [1, 2, 3]}
 
     def test_encode_not_passed_Metadata(self):
-        m = {'key': 'value'}
-        o = Metadata.encode(m)
-        assert o == m
+        p = {'key': 'value'}
+        o = Metadata.encode(p)
+        assert o == p
 
     def test_decode_passed_encoded_Metadata(self):
         d = {}
         d[Metadata.name()] = True
         d['_data'] = {'key': 'value'}
 
-        m = Metadata.decode(d)
-        assert m.get_value('key') == 'value'
+        p = Metadata.decode(d)
+        assert p.get_value('key') == 'value'
 
     def test_decode_not_passed_encoded_Metadata(self):
         c = {'key': 'value'}
@@ -612,19 +612,19 @@ class TestMetadata(object):
         assert o == c
 
     def test_set_value_already_set(self):
-        m = Metadata()
-        m.set_value('key', 0)
-        m.set_value('key', 1)
-        assert m.get_value('key') == 1
+        p = Metadata()
+        p.set_value('key', 0)
+        p.set_value('key', 1)
+        assert p.get_value('key') == 1
 
     def test_set_value_not_already_set(self):
-        m = Metadata()
-        m.set_value('key', 999)
-        assert m.get_value('key') == 999
+        p = Metadata()
+        p.set_value('key', 999)
+        assert p.get_value('key') == 999
 
     def test_to_bytes_value_not_set(self):
-        m = Metadata()
-        b = m.to_bytes()
+        p = Metadata()
+        b = p.to_bytes()
 
         expected = {}
         expected[Metadata.name()] = True
@@ -634,45 +634,45 @@ class TestMetadata(object):
         assert b == expected
 
     def test_to_bytes_value_set(self):
-        m = Metadata()
-        m.set_value('key', 999)
-        b = m.to_bytes()
+        p = Metadata()
+        p.set_value('key', 999)
+        b = p.to_bytes()
 
         expected = {}
         expected[Metadata.name()] = True
-        expected['_data'] = m._data
+        expected['_data'] = p._data
         expected = msgpack.packb(expected, use_bin_type=True)
 
         assert b == expected
 
     def test_from_bytes_value_not_set(self):
-        m = Metadata()
+        p = Metadata()
 
         expected = {}
         expected[Metadata.name()] = True
         expected['_data'] = {}
         b = msgpack.packb(expected, use_bin_type=True)
 
-        new_m = Metadata().from_bytes(b)
+        new_p = Metadata().from_bytes(b)
 
-        assert m.to_dict() == new_m.to_dict()
+        assert p.to_dict() == new_p.to_dict()
 
     def test_from_bytes_value_set(self):
-        m = Metadata()
-        m.set_value('key', 999)
+        p = Metadata()
+        p.set_value('key', 999)
 
         expected = {}
         expected[Metadata.name()] = True
-        expected['_data'] = m._data
+        expected['_data'] = p._data
         b = msgpack.packb(expected, use_bin_type=True)
 
-        new_m = Metadata().set_value('key', 0).from_bytes(b)
+        new_p = Metadata().set_value('key', 0).from_bytes(b)
 
-        assert m.to_dict() == new_m.to_dict()
+        assert p.to_dict() == new_p.to_dict()
 
     def test_to_dict(self):
-        m = Metadata().set_value('key', 999)
-        assert m.to_dict() == {'data': {'key': 999}}
+        p = Metadata().set_value('key', 999)
+        assert p.to_dict() == {'data': {'key': 999}}
 
 
 class TestContent(object):

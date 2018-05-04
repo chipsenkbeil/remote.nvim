@@ -3,7 +3,7 @@
 # AUTHOR: Chip Senkbeil <chip.senkbeil at gmail.com>
 # License: Apache 2.0 License
 # =============================================================================
-from remote.msg import *
+from remote.packet import *
 from remote.msgs import cmd
 
 
@@ -69,19 +69,19 @@ def test_new_sets_parent_header():
 
 
 def test_is_match_cmd():
-    m = Message().set_header(Header().set_msg_type(cmd.MESSAGE_TYPE))
+    m = Packet().set_header(Header().set_type(cmd.MESSAGE_TYPE))
     assert cmd.is_match(m)
 
 
 def test_is_match_not_cmd():
-    m = Message().set_header(Header().set_msg_type('SOME_OTHER_TYPE'))
+    m = Packet().set_header(Header().set_type('SOME_OTHER_TYPE'))
     assert not cmd.is_match(m)
 
 
 def test_get_name_for_value():
     expected = 'CmdName'
 
-    m = Message().set_metadata(Metadata().set_value(
+    m = Packet().set_metadata(Metadata().set_value(
         cmd.CMD_METADATA_NAME, expected))
     actual = cmd.get_name(m)
 
@@ -91,7 +91,7 @@ def test_get_name_for_value():
 def test_get_name_for_nothing():
     expected = None
 
-    m = Message().set_metadata(Metadata())
+    m = Packet().set_metadata(Metadata())
     actual = cmd.get_name(m)
 
     assert actual == expected
@@ -100,7 +100,7 @@ def test_get_name_for_nothing():
 def test_get_args_for_value():
     expected = 'arg1 arg2 arg3'
 
-    m = Message().set_metadata(Metadata().set_value(
+    m = Packet().set_metadata(Metadata().set_value(
         cmd.CMD_METADATA_ARGS, expected))
     actual = cmd.get_args(m)
 
@@ -110,7 +110,7 @@ def test_get_args_for_value():
 def test_get_args_for_nothing():
     expected = None
 
-    m = Message().set_metadata(Metadata())
+    m = Packet().set_metadata(Metadata())
     actual = cmd.get_args(m)
 
     assert actual == expected

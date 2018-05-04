@@ -1,5 +1,5 @@
 # =============================================================================
-# FILE: msg.py
+# FILE: packet.py
 # AUTHOR: Chip Senkbeil <chip.senkbeil at gmail.com>
 # License: Apache 2.0 License
 # =============================================================================
@@ -16,11 +16,11 @@ MAX_MESSAGE_SIZE = 65507
 # we have plenty of room for the header and metadata
 MAX_CONTENT_SIZE = 61440  # 60 KiB (~3.97 KiB of bytes for header)
 
-# Represents the version of messages supported
+# Represents the version of packets supported
 MESSAGE_VERSION = '0.1'
 
 
-class Message(object):
+class Packet(object):
     _signature = None
     _header = None
     _parent_header = None
@@ -29,27 +29,27 @@ class Message(object):
 
     @staticmethod
     def name():
-        return '__message__'
+        return '__packet__'
 
     @staticmethod
     def read(obj):
-        """Reads the content into a new message.
+        """Reads the content into a new packet.
 
         :param obj: The content to read
-        :returns: A new message instance, or None if not valid type
+        :returns: A new packet instance, or None if not valid type
         """
         m = None
 
         if (isinstance(obj, bytes)):
-            m = Message().from_bytes(obj)
+            m = Packet().from_bytes(obj)
 
         return m
 
     @staticmethod
     def encode(obj):
-        if (isinstance(obj, Message)):
+        if (isinstance(obj, Packet)):
             d = {}
-            d[Message.name()] = True
+            d[Packet.name()] = True
             d['_signature'] = obj._signature
             d['_header'] = obj._header
             d['_parent_header'] = obj._parent_header
@@ -63,8 +63,8 @@ class Message(object):
 
     @staticmethod
     def decode(obj):
-        if (Message.name() in obj):
-            m = Message()
+        if (Packet.name() in obj):
+            m = Packet()
             m._signature = obj['_signature']
             m._header = obj['_header']
             m._parent_header = obj['_parent_header']
@@ -117,7 +117,7 @@ class Message(object):
         return self._content
 
     def gen_signature(self, hmac):
-        """Generates a signature for the message based on its properties."""
+        """Generates a signature for the packet based on its properties."""
         assert self._signature is None
         self._signature = self._gen_signature(hmac)
 
@@ -139,37 +139,37 @@ class Message(object):
         return self._signature
 
     def is_signature_valid(self, hmac):
-        """Indicates whether the signature of the message is valid."""
+        """Indicates whether the signature of the packet is valid."""
         sig = self._genSignature(hmac)
         return self._signature == sig
 
     def to_bytes(self):
-        """Converts message into bytes."""
+        """Converts packet into bytes."""
         assert self._signature is not None
         assert self._header is not None
         assert self._parent_header is not None
         assert self._metadata is not None
         assert self._content is not None
-        return msgpack.packb(self, default=Message.encode, use_bin_type=True)
+        return msgpack.packb(self, default=Packet.encode, use_bin_type=True)
 
     def from_bytes(self, b):
-        """Fills in message using bytes."""
+        """Fills in packet using bytes."""
         assert self._signature is None
         assert self._header is None
         assert self._parent_header is None
         assert self._metadata is None
         assert self._content is None
 
-        msg = msgpack.unpackb(b, object_hook=Message.decode, raw=False)
-        self._signature = msg._signature
-        self._header = msg._header
-        self._parent_header = msg._parent_header
-        self._metadata = msg._metadata
-        self._content = msg._content
+        packet = msgpack.unpackb(b, object_hook=Packet.decode, raw=False)
+        self._signature = packet._signature
+        self._header = packet._header
+        self._parent_header = packet._parent_header
+        self._metadata = packet._metadata
+        self._content = packet._content
         return self
 
     def to_dict(self):
-        """Converts message into dictionary."""
+        """Converts packet into dictionary."""
         return {
             'signature': self._signature,
             'header': self._header,
@@ -183,20 +183,20 @@ class Message(object):
 
 
 class Header(object):
-    _msg_id = None
+    _id = None
     _username = None
     _session = None
     _date = None
-    _msg_type = None
+    _type = None
     _version = None
 
     @staticmethod
     def empty():
         return (Header()
-                .set_msg_id('')
+                .set_id('')
                 .set_username('')
                 .set_date_now()
-                .set_msg_type('')
+                .set_type('')
                 .set_version(''))
 
     @staticmethod
@@ -208,11 +208,11 @@ class Header(object):
         if (isinstance(obj, Header)):
             d = {}
             d[Header.name()] = True
-            d['_msg_id'] = obj._msg_id
+            d['_id'] = obj._id
             d['_username'] = obj._username
             d['_session'] = obj._session
             d['_date'] = obj._date
-            d['_msg_type'] = obj._msg_type
+            d['_type'] = obj._type
             d['_version'] = obj._version
             return d
         elif (isinstance(obj, datetime)):
@@ -226,11 +226,11 @@ class Header(object):
     def decode(obj):
         if (Header.name() in obj):
             m = Header()
-            m._msg_id = obj['_msg_id']
+            m._id = obj['_id']
             m._username = obj['_username']
             m._session = obj['_session']
             m._date = obj['_date']
-            m._msg_type = obj['_msg_type']
+            m._type = obj['_type']
             m._version = obj['_version']
             return m
         elif ('__datetime__' in obj):
@@ -240,18 +240,18 @@ class Header(object):
             )
         return obj
 
-    def set_random_msg_id(self):
-        self.set_msg_id(str(uuid4()))
+    def set_random_id(self):
+        self.set_id(str(uuid4()))
         return self
 
-    def set_msg_id(self, msg_id):
-        assert isinstance(msg_id, str)
-        assert self._msg_id is None
-        self._msg_id = msg_id
+    def set_id(self, id):
+        assert isinstance(id, str)
+        assert self._id is None
+        self._id = id
         return self
 
-    def get_msg_id(self):
-        return self._msg_id
+    def get_id(self):
+        return self._id
 
     def set_username(self, username):
         assert isinstance(username, str)
@@ -284,14 +284,14 @@ class Header(object):
     def get_date(self):
         return self._date
 
-    def set_msg_type(self, msg_type):
-        assert isinstance(msg_type, str)
-        assert self._msg_type is None
-        self._msg_type = msg_type
+    def set_type(self, type):
+        assert isinstance(type, str)
+        assert self._type is None
+        self._type = type
         return self
 
-    def get_msg_type(self):
-        return self._msg_type
+    def get_type(self):
+        return self._type
 
     def set_version(self, version):
         assert isinstance(version, str)
@@ -304,40 +304,40 @@ class Header(object):
 
     def to_bytes(self):
         """Converts header into bytes."""
-        assert self._msg_id is not None
+        assert self._id is not None
         assert self._username is not None
         assert self._session is not None
         assert self._date is not None
-        assert self._msg_type is not None
+        assert self._type is not None
         assert self._version is not None
         return msgpack.packb(self, default=Header.encode, use_bin_type=True)
 
     def from_bytes(self, b):
         """Fills in header using bytes."""
-        assert self._msg_id is None
+        assert self._id is None
         assert self._username is None
         assert self._session is None
         assert self._date is None
-        assert self._msg_type is None
+        assert self._type is None
         assert self._version is None
 
         header = msgpack.unpackb(b, object_hook=Header.decode, raw=False)
-        self._msg_id = header._msg_id
+        self._id = header._id
         self._username = header._username
         self._session = header._session
         self._date = header._date
-        self._msg_type = header._msg_type
+        self._type = header._type
         self._version = header._version
         return self
 
     def to_dict(self):
         """Converts header into dictionary."""
         return {
-            'msg_id': self._msg_id,
+            'id': self._id,
             'username': self._username,
             'session': self._session,
             'date': self._date,
-            'msg_type': self._msg_type,
+            'type': self._type,
             'version': self._version,
         }
 

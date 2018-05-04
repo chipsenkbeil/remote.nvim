@@ -3,7 +3,7 @@
 # AUTHOR: Chip Senkbeil <chip.senkbeil at gmail.com>
 # License: Apache 2.0 License
 # =============================================================================
-from remote.msg import *
+from remote.packet import *
 from remote.msgs import error
 
 
@@ -54,19 +54,19 @@ def test_new_sets_parent_header():
 
 
 def test_is_match_error():
-    m = Message().set_header(Header().set_msg_type(error.MESSAGE_TYPE))
+    m = Packet().set_header(Header().set_type(error.MESSAGE_TYPE))
     assert error.is_match(m)
 
 
 def test_is_match_not_error():
-    m = Message().set_header(Header().set_msg_type('SOME_OTHER_TYPE'))
+    m = Packet().set_header(Header().set_type('SOME_OTHER_TYPE'))
     assert not error.is_match(m)
 
 
 def test_get_exception_text_for_value():
     expected = 'some exception turned into text'
 
-    m = Message().set_content(Content().set_data(expected))
+    m = Packet().set_content(Content().set_data(expected))
     actual = error.get_exception_text(m)
 
     assert actual == expected
@@ -75,7 +75,7 @@ def test_get_exception_text_for_value():
 def test_get_exception_text_for_nothing():
     expected = None
 
-    m = Message().set_content(Content())
+    m = Packet().set_content(Content())
     actual = error.get_exception_text(m)
 
     assert actual == expected

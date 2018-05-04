@@ -103,6 +103,7 @@ ENV/
 # vim ctags file
 tags
 tags.lock
+tags.temp
 
 # vim-themis local dir
 vim-themis

@@ -3,7 +3,7 @@
 # AUTHOR: Chip Senkbeil <chip.senkbeil at gmail.com>
 # License: Apache 2.0 License
 # =============================================================================
-from remote.msg import *
+from remote.packet import *
 from remote.msgs import sync
 
 
@@ -176,53 +176,53 @@ def test_new_recv_sets_parent_header():
 
 
 def test_is_match_sync():
-    m = Message().set_header(Header().set_msg_type(sync.MESSAGE_TYPE))
+    m = Packet().set_header(Header().set_type(sync.MESSAGE_TYPE))
     assert sync.is_match(m)
 
 
 def test_is_match_not_sync():
-    m = Message().set_header(Header().set_msg_type('SOME_OTHER_TYPE'))
+    m = Packet().set_header(Header().set_type('SOME_OTHER_TYPE'))
     assert not sync.is_match(m)
 
 
 def test_is_direction_send_for_send():
-    m = Message().set_metadata(Metadata().set_value(
+    m = Packet().set_metadata(Metadata().set_value(
         sync.SYNC_METADATA_DIRECTION, sync.SYNC_METADATA_DIRECTION_SEND))
     assert sync.is_direction_send(m)
 
 
 def test_is_direction_send_for_recv():
-    m = Message().set_metadata(Metadata().set_value(
+    m = Packet().set_metadata(Metadata().set_value(
         sync.SYNC_METADATA_DIRECTION, sync.SYNC_METADATA_DIRECTION_RECV))
     assert not sync.is_direction_send(m)
 
 
 def test_is_direction_send_for_nothing():
-    m = Message().set_metadata(Metadata())
+    m = Packet().set_metadata(Metadata())
     assert not sync.is_direction_send(m)
 
 
 def test_is_direction_recv_for_recv():
-    m = Message().set_metadata(Metadata().set_value(
+    m = Packet().set_metadata(Metadata().set_value(
         sync.SYNC_METADATA_DIRECTION, sync.SYNC_METADATA_DIRECTION_RECV))
     assert sync.is_direction_recv(m)
 
 
 def test_is_direction_recv_for_send():
-    m = Message().set_metadata(Metadata().set_value(
+    m = Packet().set_metadata(Metadata().set_value(
         sync.SYNC_METADATA_DIRECTION, sync.SYNC_METADATA_DIRECTION_SEND))
     assert not sync.is_direction_recv(m)
 
 
 def test_is_direction_recv_for_nothing():
-    m = Message().set_metadata(Metadata())
+    m = Packet().set_metadata(Metadata())
     assert not sync.is_direction_recv(m)
 
 
 def test_get_chunk_size_for_value():
     expected = 999
 
-    m = Message().set_metadata(Metadata().set_value(
+    m = Packet().set_metadata(Metadata().set_value(
         sync.SYNC_METADATA_CHUNK_SIZE, expected))
     actual = sync.get_chunk_size(m)
 
@@ -232,7 +232,7 @@ def test_get_chunk_size_for_value():
 def test_get_chunk_size_for_nothing():
     expected = None
 
-    m = Message().set_metadata(Metadata())
+    m = Packet().set_metadata(Metadata())
     actual = sync.get_chunk_size(m)
 
     assert actual == expected
@@ -241,7 +241,7 @@ def test_get_chunk_size_for_nothing():
 def test_get_chunk_count_for_value():
     expected = 999
 
-    m = Message().set_metadata(Metadata().set_value(
+    m = Packet().set_metadata(Metadata().set_value(
         sync.SYNC_METADATA_CHUNK_COUNT, expected))
     actual = sync.get_chunk_count(m)
 
@@ -251,7 +251,7 @@ def test_get_chunk_count_for_value():
 def test_get_chunk_count_for_nothing():
     expected = None
 
-    m = Message().set_metadata(Metadata())
+    m = Packet().set_metadata(Metadata())
     actual = sync.get_chunk_count(m)
 
     assert actual == expected
@@ -260,7 +260,7 @@ def test_get_chunk_count_for_nothing():
 def test_get_chunk_index_for_value():
     expected = 999
 
-    m = Message().set_metadata(Metadata().set_value(
+    m = Packet().set_metadata(Metadata().set_value(
         sync.SYNC_METADATA_CHUNK_INDEX, expected))
     actual = sync.get_chunk_index(m)
 
@@ -270,7 +270,7 @@ def test_get_chunk_index_for_value():
 def test_get_chunk_index_for_nothing():
     expected = None
 
-    m = Message().set_metadata(Metadata())
+    m = Packet().set_metadata(Metadata())
     actual = sync.get_chunk_index(m)
 
     assert actual == expected
@@ -279,7 +279,7 @@ def test_get_chunk_index_for_nothing():
 def test_get_filename_for_value():
     expected = 'some file name'
 
-    m = Message().set_metadata(Metadata().set_value(
+    m = Packet().set_metadata(Metadata().set_value(
         sync.SYNC_METADATA_FILENAME, expected))
     actual = sync.get_filename(m)
 
@@ -289,7 +289,7 @@ def test_get_filename_for_value():
 def test_get_filename_for_nothing():
     expected = None
 
-    m = Message().set_metadata(Metadata())
+    m = Packet().set_metadata(Metadata())
     actual = sync.get_filename(m)
 
     assert actual == expected
@@ -298,7 +298,7 @@ def test_get_filename_for_nothing():
 def test_get_data_for_value():
     expected = b'some content bytes'
 
-    m = Message().set_content(Content().set_data(expected))
+    m = Packet().set_content(Content().set_data(expected))
     actual = sync.get_data(m)
 
     assert actual == expected
@@ -307,7 +307,7 @@ def test_get_data_for_value():
 def test_get_data_for_nothing():
     expected = None
 
-    m = Message().set_content(Content())
+    m = Packet().set_content(Content())
     actual = sync.get_data(m)
 
     assert actual == expected
