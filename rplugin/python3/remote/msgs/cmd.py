@@ -14,7 +14,6 @@ CMD_METADATA_ARGS = 'A'
 
 
 def new(
-    hmac,
     username,
     session,
     name,
@@ -23,7 +22,6 @@ def new(
 ):
     """Creates a new command message to execute on the remote nvim instance.
 
-    :param hmac: The HMAC instance to use when generating a signature
     :param username: The name of the user sending the message
     :param session: The session associated with the message
     :param name: The name of the command to invoke on the remote nvim instance

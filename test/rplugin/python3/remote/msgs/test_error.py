@@ -5,14 +5,11 @@
 # =============================================================================
 from remote.msg import *
 from remote.msgs import error
-from remote.security import new_hmac_from_key
 
 
 def test_new_sets_username():
     expected = 'senkwich'
-    hmac = new_hmac_from_key('')
     m = error.new(
-        hmac=hmac,
         username=expected,
         session='',
         exception=Exception(),
@@ -23,9 +20,7 @@ def test_new_sets_username():
 
 def test_new_sets_session():
     expected = 'mysession'
-    hmac = new_hmac_from_key('')
     m = error.new(
-        hmac=hmac,
         username='',
         session=expected,
         exception=Exception(),
@@ -36,9 +31,7 @@ def test_new_sets_session():
 
 def test_new_sets_exception_text():
     e = Exception('this is an exception')
-    hmac = new_hmac_from_key('')
     m = error.new(
-        hmac=hmac,
         username='',
         session='',
         exception=e,
@@ -50,9 +43,7 @@ def test_new_sets_exception_text():
 
 def test_new_sets_parent_header():
     expected = Header.empty()
-    hmac = new_hmac_from_key('')
     m = error.new(
-        hmac=hmac,
         username='',
         session='',
         exception=Exception(),

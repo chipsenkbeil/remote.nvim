@@ -10,7 +10,6 @@ MESSAGE_TYPE = 'ERROR'
 
 
 def new(
-    hmac,
     username,
     session,
     exception,
@@ -18,7 +17,6 @@ def new(
 ):
     """Creates a new error message to be reported on the remote nvim instance.
 
-    :param hmac: The HMAC instance to use when generating a signature
     :param username: The name of the user sending the message
     :param session: The session associated with the message
     :param exception: The exception to report

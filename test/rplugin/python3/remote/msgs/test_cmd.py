@@ -5,14 +5,11 @@
 # =============================================================================
 from remote.msg import *
 from remote.msgs import cmd
-from remote.security import new_hmac_from_key
 
 
 def test_new_sets_username():
     expected = 'senkwich'
-    hmac = new_hmac_from_key('')
     m = cmd.new(
-        hmac=hmac,
         username=expected,
         session='',
         name='',
@@ -24,9 +21,7 @@ def test_new_sets_username():
 
 def test_new_sets_session():
     expected = 'mysession'
-    hmac = new_hmac_from_key('')
     m = cmd.new(
-        hmac=hmac,
         username='',
         session=expected,
         name='',
@@ -38,9 +33,7 @@ def test_new_sets_session():
 
 def test_new_sets_name():
     expected = 'CmdName'
-    hmac = new_hmac_from_key('')
     m = cmd.new(
-        hmac=hmac,
         username='',
         session='',
         name=expected,
@@ -52,9 +45,7 @@ def test_new_sets_name():
 
 def test_new_sets_args():
     expected = 'arg1 arg2 3 4 ;;1aksdfk43 q34 \' \' asdlfkj2'
-    hmac = new_hmac_from_key('')
     m = cmd.new(
-        hmac=hmac,
         username='',
         session='',
         name='',
@@ -66,9 +57,7 @@ def test_new_sets_args():
 
 def test_new_sets_parent_header():
     expected = Header.empty()
-    hmac = new_hmac_from_key('')
     m = cmd.new(
-        hmac=hmac,
         username='',
         session='',
         name='',

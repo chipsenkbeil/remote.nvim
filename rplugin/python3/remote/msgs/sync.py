@@ -20,19 +20,17 @@ SYNC_METADATA_DIRECTION_RECV = 'R'
 
 
 def new_send(
-        hmac,
-        username,
-        session,
-        filename,
-        count,
-        index,
-        data,
-        length,
-        parent_header=Header.empty()
+    username,
+    session,
+    filename,
+    count,
+    index,
+    data,
+    length,
+    parent_header=Header.empty(),
 ):
     """Creates a new sync message to send data.
 
-    :param hmac: The HMAC instance to use when generating a signature
     :param username: The name of the user sending the message
     :param session: The session associated with the message
     :param filename: The full name of the file (including path) to sync
@@ -70,15 +68,13 @@ def new_send(
 
 
 def new_recv(
-        hmac,
-        username,
-        session,
-        filename,
-        parent_header=Header.empty(),
+    username,
+    session,
+    filename,
+    parent_header=Header.empty(),
 ):
     """Creates a new sync message to receive data.
 
-    :param hmac: The HMAC instance to use when generating a signature
     :param username: The name of the user sending the message
     :param session: The session associated with the message
     :param filename: The full name of the file (including path) to sync

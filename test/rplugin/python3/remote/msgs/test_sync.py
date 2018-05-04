@@ -5,14 +5,11 @@
 # =============================================================================
 from remote.msg import *
 from remote.msgs import sync
-from remote.security import new_hmac_from_key
 
 
 def test_new_send_sets_username():
     expected = 'senkwich'
-    hmac = new_hmac_from_key('')
     m = sync.new_send(
-        hmac=hmac,
         username=expected,
         session='',
         filename='',
@@ -27,9 +24,7 @@ def test_new_send_sets_username():
 
 def test_new_send_sets_session():
     expected = 'mysession'
-    hmac = new_hmac_from_key('')
     m = sync.new_send(
-        hmac=hmac,
         username='',
         session=expected,
         filename='',
@@ -44,9 +39,7 @@ def test_new_send_sets_session():
 
 def test_new_send_sets_filename():
     expected = 'my file'
-    hmac = new_hmac_from_key('')
     m = sync.new_send(
-        hmac=hmac,
         username='',
         session='',
         filename=expected,
@@ -61,9 +54,7 @@ def test_new_send_sets_filename():
 
 def test_new_send_sets_chunk_count():
     expected = 999
-    hmac = new_hmac_from_key('')
     m = sync.new_send(
-        hmac=hmac,
         username='',
         session='',
         filename='',
@@ -78,9 +69,7 @@ def test_new_send_sets_chunk_count():
 
 def test_new_send_sets_chunk_index():
     expected = 999
-    hmac = new_hmac_from_key('')
     m = sync.new_send(
-        hmac=hmac,
         username='',
         session='',
         filename='',
@@ -95,9 +84,7 @@ def test_new_send_sets_chunk_index():
 
 def test_new_send_sets_data():
     expected = b'some data bytes'
-    hmac = new_hmac_from_key('')
     m = sync.new_send(
-        hmac=hmac,
         username='',
         session='',
         filename='',
@@ -113,9 +100,7 @@ def test_new_send_sets_data():
 def test_new_send_sets_data_using_length():
     data = b'some data bytes'
     length = int(len(data) / 2)
-    hmac = new_hmac_from_key('')
     m = sync.new_send(
-        hmac=hmac,
         username='',
         session='',
         filename='',
@@ -131,9 +116,7 @@ def test_new_send_sets_data_using_length():
 
 def test_new_send_sets_parent_header():
     expected = Header.empty()
-    hmac = new_hmac_from_key('')
     m = sync.new_send(
-        hmac=hmac,
         username='',
         session='',
         filename='',
@@ -149,9 +132,7 @@ def test_new_send_sets_parent_header():
 
 def test_new_recv_sets_username():
     expected = 'senkwich'
-    hmac = new_hmac_from_key('')
     m = sync.new_recv(
-        hmac=hmac,
         username=expected,
         session='',
         filename='',
@@ -162,9 +143,7 @@ def test_new_recv_sets_username():
 
 def test_new_recv_sets_session():
     expected = 'mysession'
-    hmac = new_hmac_from_key('')
     m = sync.new_recv(
-        hmac=hmac,
         username='',
         session=expected,
         filename='',
@@ -175,9 +154,7 @@ def test_new_recv_sets_session():
 
 def test_new_recv_sets_filename():
     expected = 'my file'
-    hmac = new_hmac_from_key('')
     m = sync.new_recv(
-        hmac=hmac,
         username='',
         session='',
         filename=expected,
@@ -188,9 +165,7 @@ def test_new_recv_sets_filename():
 
 def test_new_recv_sets_parent_header():
     expected = Header.empty()
-    hmac = new_hmac_from_key('')
     m = sync.new_recv(
-        hmac=hmac,
         username='',
         session='',
         filename='',
