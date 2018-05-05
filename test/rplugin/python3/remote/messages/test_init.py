@@ -11,10 +11,13 @@ from remote.messages.constants import MESSAGE_SUBTYPE_REQUEST
 
 def test_register_invalid_class():
     with pytest.raises(Exception):
-        register(3)
+        @register
+        class MyMessage(object):
+            _type = 'some type'
 
 
 def test_register_valid_class():
+    @register
     class MyMessage(BaseMessage):
         _type = 'some type'
 
@@ -30,5 +33,4 @@ def test_register_valid_class():
         def is_broadcast():
             return False
 
-    assert register(MyMessage) == MyMessage
     assert registry.lookup('some type', MESSAGE_SUBTYPE_REQUEST) == MyMessage
