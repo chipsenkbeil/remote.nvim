@@ -5,8 +5,21 @@
 # =============================================================================
 import pytest
 import msgpack
-from remote.packet import *
-from remote.messages.command import *
+from remote.packet import (
+    Content,
+    Header,
+    Packet,
+)
+from remote.messages.constants import (
+    MESSAGE_TYPE_COMMAND,
+    MESSAGE_SUBTYPE,
+    MESSAGE_SUBTYPE_REQUEST,
+    MESSAGE_SUBTYPE_RESPONSE,
+)
+from remote.messages.command import (
+    CommandRequestMessage,
+    CommandResponseMessage,
+)
 
 TEST_ID = 12345
 TEST_USERNAME = 'senkwich'

@@ -3,11 +3,40 @@
 # AUTHOR: Chip Senkbeil <chip.senkbeil at gmail.cop>
 # License: Apache 2.0 License
 # =============================================================================
-
 import pytest
 import msgpack
-from remote.packet import *
-from remote.messages.file import *
+from remote.packet import (
+    Content,
+    Header,
+    Metadata,
+    Packet,
+)
+from remote.messages.constants import (
+    MESSAGE_METADATA_CHUNK_INDEX,
+    MESSAGE_METADATA_FILE_LENGTH,
+    MESSAGE_METADATA_FILE_VERSION,
+    MESSAGE_METADATA_TOTAL_CHUNKS,
+    MESSAGE_SUBTYPE,
+    MESSAGE_SUBTYPE_BROADCAST,
+    MESSAGE_SUBTYPE_REQUEST,
+    MESSAGE_SUBTYPE_RESPONSE,
+    MESSAGE_TYPE_FILE_CHANGED,
+    MESSAGE_TYPE_FILE_LIST,
+    MESSAGE_TYPE_RETRIEVE_FILE,
+    MESSAGE_TYPE_UPDATE_FILE_DATA,
+    MESSAGE_TYPE_UPDATE_FILE_START,
+)
+from remote.messages.file import (
+    FileChangeBroadcastMessage,
+    FileListRequestMessage,
+    FileListResponseMessage,
+    RetrieveFileRequestMessage,
+    RetrieveFileResponseMessage,
+    UpdateFileDataRequestMessage,
+    UpdateFileDataResponseMessage,
+    UpdateFileStartRequestMessage,
+    UpdateFileStartResponseMessage,
+)
 
 TEST_ID = 12345
 TEST_USERNAME = 'senkwich'
@@ -220,7 +249,6 @@ class TestRetrieveFileResponseMessage(object):
         assert packet.get_content().get_data() == self._chunk_data
 
     def test_from_packet(self):
-        file_path = 'path/to/file'
         packet = (Packet()
                   .set_header(Header()
                               .set_id(TEST_ID)
@@ -545,7 +573,6 @@ class TestFileChangeBroadcastMessage(object):
         assert packet.get_content().get_data() == self._file_path
 
     def test_from_packet(self):
-        file_path = 'path/to/file'
         packet = (Packet()
                   .set_header(Header()
                               .set_id(TEST_ID)

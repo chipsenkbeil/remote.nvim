@@ -3,7 +3,11 @@
 # AUTHOR: Chip Senkbeil <chip.senkbeil at gmail.cop>
 # License: Apache 2.0 License
 # =============================================================================
-from .messages.constants import *
+from .messages.constants import (
+    MESSAGE_SUBTYPE_REQUEST,
+    MESSAGE_SUBTYPE_RESPONSE,
+    MESSAGE_SUBTYPE_BROADCAST,
+)
 
 
 class MessageRegistry(object):

@@ -4,9 +4,21 @@
 # License: Apache 2.0 License
 # =============================================================================
 from uuid import uuid4
-from .base import *
-from .constants import *
+from . import register
+from .base import (
+    BaseRequestMessage,
+    BaseResponseMessage,
+)
+from .constants import (
+    MESSAGE_DEFAULT_COMMAND_ARGS,
+    MESSAGE_DEFAULT_COMMAND_NAME,
+    MESSAGE_DEFAULT_SESSION,
+    MESSAGE_DEFAULT_USERNAME,
+    MESSAGE_TYPE_COMMAND,
+)
 
+
+@register
 class CommandRequestMessage(BaseRequestMessage):
     _type = MESSAGE_TYPE_COMMAND
 
@@ -54,6 +66,7 @@ class CommandRequestMessage(BaseRequestMessage):
         )
 
 
+@register
 class CommandResponseMessage(BaseResponseMessage):
     _type = MESSAGE_TYPE_COMMAND
 

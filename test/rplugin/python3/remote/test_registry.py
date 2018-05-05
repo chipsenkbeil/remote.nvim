@@ -3,9 +3,15 @@
 # AUTHOR: Chip Senkbeil <chip.senkbeil at gmail.cop>
 # License: Apache 2.0 License
 # =============================================================================
-import pytest
-from remote.registry import *
-from remote.messages.constants import *
+from remote.registry import (
+    ActionRegistry,
+    MessageRegistry,
+)
+from remote.messages.constants import (
+    MESSAGE_SUBTYPE_BROADCAST,
+    MESSAGE_SUBTYPE_REQUEST,
+    MESSAGE_SUBTYPE_RESPONSE,
+)
 
 TEST_TYPE = 'some type'
 

@@ -4,8 +4,22 @@
 # License: Apache 2.0 License
 # =============================================================================
 from uuid import uuid4
-from ..packet import *
-from .constants import *
+from ..packet import (
+    Content,
+    Header,
+    Metadata,
+    Packet,
+)
+from .constants import (
+    MESSAGE_API_VERSION,
+    MESSAGE_DEFAULT_SESSION,
+    MESSAGE_DEFAULT_USERNAME,
+    MESSAGE_SUBTYPE,
+    MESSAGE_SUBTYPE_BROADCAST,
+    MESSAGE_SUBTYPE_REQUEST,
+    MESSAGE_SUBTYPE_RESPONSE,
+)
+
 
 class BaseMessage(object):
     """Represents the base message type that all messages extend."""

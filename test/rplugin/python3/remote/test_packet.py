@@ -3,12 +3,16 @@
 # AUTHOR: Chip Senkbeil <chip.senkbeil at gmail.cop>
 # License: Apache 2.0 License
 # =============================================================================
-
 import pytest
 import msgpack
 import datetime
 from hmac import HMAC
-from remote.packet import *
+from remote.packet import (
+    Content,
+    Header,
+    Metadata,
+    Packet,
+)
 
 
 @pytest.fixture()

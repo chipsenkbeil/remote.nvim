@@ -4,10 +4,20 @@
 # License: Apache 2.0 License
 # =============================================================================
 from uuid import uuid4
-from .base import *
-from .constants import *
+from . import register
+from .base import (
+    BaseBroadcastMessage,
+    BaseResponseMessage,
+)
+from .constants import (
+    MESSAGE_DEFAULT_ERROR_TEXT,
+    MESSAGE_DEFAULT_SESSION,
+    MESSAGE_DEFAULT_USERNAME,
+    MESSAGE_TYPE_ERROR,
+)
 
 
+@register
 class ErrorResponseMessage(BaseResponseMessage):
     _type = MESSAGE_TYPE_ERROR
 
@@ -49,6 +59,7 @@ class ErrorResponseMessage(BaseResponseMessage):
         )
 
 
+@register
 class ErrorBroadcastMessage(BaseBroadcastMessage):
     _type = MESSAGE_TYPE_ERROR
 

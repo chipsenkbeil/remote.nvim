@@ -4,10 +4,37 @@
 # License: Apache 2.0 License
 # =============================================================================
 from uuid import uuid4
-from .base import *
-from .constants import *
+from . import register
+from .base import (
+    BaseBroadcastMessage,
+    BaseRequestMessage,
+    BaseResponseMessage,
+)
+from .constants import (
+    MESSAGE_DEFAULT_CHUNK_DATA,
+    MESSAGE_DEFAULT_CHUNK_INDEX,
+    MESSAGE_DEFAULT_CHUNKS_RECEIVED,
+    MESSAGE_DEFAULT_FILE_LENGTH,
+    MESSAGE_DEFAULT_FILE_LIST,
+    MESSAGE_DEFAULT_FILE_PATH,
+    MESSAGE_DEFAULT_FILE_VERSION,
+    MESSAGE_DEFAULT_SESSION,
+    MESSAGE_DEFAULT_TOTAL_CHUNKS,
+    MESSAGE_DEFAULT_USERNAME,
+    MESSAGE_METADATA_CHUNK_INDEX,
+    MESSAGE_METADATA_FILE_LENGTH,
+    MESSAGE_METADATA_FILE_VERSION,
+    MESSAGE_METADATA_TOTAL_CHUNKS,
+    MESSAGE_TYPE_FILE_CHANGED,
+    MESSAGE_TYPE_FILE_LIST,
+    MESSAGE_TYPE_RETRIEVE_FILE,
+    MESSAGE_TYPE_UPDATE_FILE_DATA,
+    MESSAGE_TYPE_UPDATE_FILE_START,
+)
+
 
 ###############################################################################
+@register
 class FileListRequestMessage(BaseRequestMessage):
     _type = MESSAGE_TYPE_FILE_LIST
 
@@ -42,6 +69,7 @@ class FileListRequestMessage(BaseRequestMessage):
 
 
 ###############################################################################
+@register
 class FileListResponseMessage(BaseResponseMessage):
     _type = MESSAGE_TYPE_FILE_LIST
 
@@ -82,6 +110,7 @@ class FileListResponseMessage(BaseResponseMessage):
 
 
 ###############################################################################
+@register
 class RetrieveFileRequestMessage(BaseRequestMessage):
     _type = MESSAGE_TYPE_RETRIEVE_FILE
 
@@ -120,6 +149,7 @@ class RetrieveFileRequestMessage(BaseRequestMessage):
 
 
 ###############################################################################
+@register
 class RetrieveFileResponseMessage(BaseResponseMessage):
     _type = MESSAGE_TYPE_RETRIEVE_FILE
 
@@ -203,6 +233,7 @@ class RetrieveFileResponseMessage(BaseResponseMessage):
 
 
 ###############################################################################
+@register
 class UpdateFileStartRequestMessage(BaseRequestMessage):
     _type = MESSAGE_TYPE_UPDATE_FILE_START
 
@@ -253,6 +284,7 @@ class UpdateFileStartRequestMessage(BaseRequestMessage):
 
 
 ###############################################################################
+@register
 class UpdateFileStartResponseMessage(BaseResponseMessage):
     _type = MESSAGE_TYPE_UPDATE_FILE_START
 
@@ -304,6 +336,7 @@ class UpdateFileStartResponseMessage(BaseResponseMessage):
 
 
 ###############################################################################
+@register
 class UpdateFileDataRequestMessage(BaseRequestMessage):
     _type = MESSAGE_TYPE_UPDATE_FILE_DATA
 
@@ -387,6 +420,7 @@ class UpdateFileDataRequestMessage(BaseRequestMessage):
 
 
 ###############################################################################
+@register
 class UpdateFileDataResponseMessage(BaseResponseMessage):
     _type = MESSAGE_TYPE_UPDATE_FILE_DATA
 
@@ -450,6 +484,7 @@ class UpdateFileDataResponseMessage(BaseResponseMessage):
 
 
 ###############################################################################
+@register
 class FileChangeBroadcastMessage(BaseBroadcastMessage):
     _type = MESSAGE_TYPE_FILE_CHANGED
 

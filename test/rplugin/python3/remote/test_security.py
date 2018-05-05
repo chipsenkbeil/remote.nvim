@@ -3,9 +3,11 @@
 # AUTHOR: Chip Senkbeil <chip.senkbeil at gmail.com>
 # License: Apache 2.0 License
 # =============================================================================
-
 import pytest
-from remote.security import *
+from remote.security import (
+    gen_signature,
+    new_hmac_from_key,
+)
 
 
 def test_new_hmac_from_key_where_key_not_string():
