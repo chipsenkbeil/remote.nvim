@@ -27,3 +27,26 @@ def is_int(s):
     :returns: True if an integer, otherwise False
     """
     return to_int(s) is not None
+
+
+def find_subclasses(cl):
+    """Finds all classes that subclass the provided class, even indirectly.
+
+    :param cl: The class whose subclasses to find
+    :returns: A list of class objects representing the subclasses
+    """
+    assert isinstance(cl, type)
+
+    class_list = []
+    queue = []
+
+    # Enqueue top-level class
+    queue.append(cl)
+
+    while (len(queue) > 0):
+        next_class = queue.pop(0)  # Dequeue next class to search
+        class_list.append(next_class)
+        queue.extend(next_class.__subclasses__())
+
+    # Return all classes but the first since that is the class we started with
+    return class_list[1:]
