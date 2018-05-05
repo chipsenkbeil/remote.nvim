@@ -5,7 +5,7 @@
 # =============================================================================
 import pytest
 import msgpack
-import datetime
+from datetime import datetime
 from hmac import HMAC
 from remote.packet import (
     Content,
