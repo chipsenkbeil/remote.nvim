@@ -74,7 +74,8 @@ class TestFileListRequestMessage(object):
         assert packet.get_header().get_type() == MESSAGE_TYPE_FILE_LIST
         assert packet.get_header().get_username() == TEST_USERNAME
         assert packet.get_header().get_session() == TEST_SESSION
-        assert packet.get_metadata().get_value(MESSAGE_SUBTYPE) == MESSAGE_SUBTYPE_REQUEST
+        assert packet.get_metadata().get_value(MESSAGE_SUBTYPE) == (
+            MESSAGE_SUBTYPE_REQUEST)
         assert packet.get_content().get_data() == self._path
 
     def test_from_packet(self):
@@ -127,7 +128,8 @@ class TestFileListResponseMessage(object):
         assert packet.get_header().get_type() == MESSAGE_TYPE_FILE_LIST
         assert packet.get_header().get_username() == TEST_USERNAME
         assert packet.get_header().get_session() == TEST_SESSION
-        assert packet.get_metadata().get_value(MESSAGE_SUBTYPE) == MESSAGE_SUBTYPE_RESPONSE
+        assert packet.get_metadata().get_value(MESSAGE_SUBTYPE) == (
+            MESSAGE_SUBTYPE_RESPONSE)
         assert packet.get_content().get_data() == self._file_list
 
     def test_from_packet(self):
@@ -176,7 +178,8 @@ class TestRetrieveFileRequestMessage(object):
         assert packet.get_header().get_type() == MESSAGE_TYPE_RETRIEVE_FILE
         assert packet.get_header().get_username() == TEST_USERNAME
         assert packet.get_header().get_session() == TEST_SESSION
-        assert packet.get_metadata().get_value(MESSAGE_SUBTYPE) == MESSAGE_SUBTYPE_REQUEST
+        assert packet.get_metadata().get_value(MESSAGE_SUBTYPE) == (
+            MESSAGE_SUBTYPE_REQUEST)
         assert packet.get_content().get_data() == self._file_path
 
     def test_from_packet(self):
@@ -241,11 +244,16 @@ class TestRetrieveFileResponseMessage(object):
         assert packet.get_header().get_type() == MESSAGE_TYPE_RETRIEVE_FILE
         assert packet.get_header().get_username() == TEST_USERNAME
         assert packet.get_header().get_session() == TEST_SESSION
-        assert packet.get_metadata().get_value(MESSAGE_SUBTYPE) == MESSAGE_SUBTYPE_RESPONSE
-        assert packet.get_metadata().get_value(MESSAGE_METADATA_FILE_LENGTH) == self._file_length
-        assert packet.get_metadata().get_value(MESSAGE_METADATA_FILE_VERSION) == self._file_version
-        assert packet.get_metadata().get_value(MESSAGE_METADATA_TOTAL_CHUNKS) == self._total_chunks
-        assert packet.get_metadata().get_value(MESSAGE_METADATA_CHUNK_INDEX) == self._chunk_index
+        assert packet.get_metadata().get_value(MESSAGE_SUBTYPE) == (
+            MESSAGE_SUBTYPE_RESPONSE)
+        assert self._file_length == (
+            packet.get_metadata().get_value(MESSAGE_METADATA_FILE_LENGTH))
+        assert self._file_version == (
+            packet.get_metadata().get_value(MESSAGE_METADATA_FILE_VERSION))
+        assert self._total_chunks == (
+            packet.get_metadata().get_value(MESSAGE_METADATA_TOTAL_CHUNKS))
+        assert self._chunk_index == (
+            packet.get_metadata().get_value(MESSAGE_METADATA_CHUNK_INDEX))
         assert packet.get_content().get_data() == self._chunk_data
 
     def test_from_packet(self):
@@ -255,10 +263,14 @@ class TestRetrieveFileResponseMessage(object):
                               .set_username(TEST_USERNAME)
                               .set_session(TEST_SESSION))
                   .set_metadata(Metadata()
-                                .set_value(MESSAGE_METADATA_FILE_LENGTH, self._file_length)
-                                .set_value(MESSAGE_METADATA_FILE_VERSION, self._file_version)
-                                .set_value(MESSAGE_METADATA_TOTAL_CHUNKS, self._total_chunks)
-                                .set_value(MESSAGE_METADATA_CHUNK_INDEX, self._chunk_index))
+                                .set_value(MESSAGE_METADATA_FILE_LENGTH,
+                                           self._file_length)
+                                .set_value(MESSAGE_METADATA_FILE_VERSION,
+                                           self._file_version)
+                                .set_value(MESSAGE_METADATA_TOTAL_CHUNKS,
+                                           self._total_chunks)
+                                .set_value(MESSAGE_METADATA_CHUNK_INDEX,
+                                           self._chunk_index))
                   .set_content(Content().set_data(self._chunk_data)))
         m = self._class.from_packet(packet)
 
@@ -319,11 +331,16 @@ class TestUpdateFileDataRequestMessage(object):
         assert packet.get_header().get_type() == MESSAGE_TYPE_UPDATE_FILE_DATA
         assert packet.get_header().get_username() == TEST_USERNAME
         assert packet.get_header().get_session() == TEST_SESSION
-        assert packet.get_metadata().get_value(MESSAGE_SUBTYPE) == MESSAGE_SUBTYPE_REQUEST
-        assert packet.get_metadata().get_value(MESSAGE_METADATA_FILE_LENGTH) == self._file_length
-        assert packet.get_metadata().get_value(MESSAGE_METADATA_FILE_VERSION) == self._file_version
-        assert packet.get_metadata().get_value(MESSAGE_METADATA_TOTAL_CHUNKS) == self._total_chunks
-        assert packet.get_metadata().get_value(MESSAGE_METADATA_CHUNK_INDEX) == self._chunk_index
+        assert packet.get_metadata().get_value(MESSAGE_SUBTYPE) == (
+            MESSAGE_SUBTYPE_REQUEST)
+        assert self._file_length == (
+            packet.get_metadata().get_value(MESSAGE_METADATA_FILE_LENGTH))
+        assert self._file_version == (
+            packet.get_metadata().get_value(MESSAGE_METADATA_FILE_VERSION))
+        assert self._total_chunks == (
+            packet.get_metadata().get_value(MESSAGE_METADATA_TOTAL_CHUNKS))
+        assert self._chunk_index == (
+            packet.get_metadata().get_value(MESSAGE_METADATA_CHUNK_INDEX))
         assert packet.get_content().get_data() == self._chunk_data
 
     def test_from_packet(self):
@@ -333,10 +350,14 @@ class TestUpdateFileDataRequestMessage(object):
                               .set_username(TEST_USERNAME)
                               .set_session(TEST_SESSION))
                   .set_metadata(Metadata()
-                                .set_value(MESSAGE_METADATA_FILE_LENGTH, self._file_length)
-                                .set_value(MESSAGE_METADATA_FILE_VERSION, self._file_version)
-                                .set_value(MESSAGE_METADATA_TOTAL_CHUNKS, self._total_chunks)
-                                .set_value(MESSAGE_METADATA_CHUNK_INDEX, self._chunk_index))
+                                .set_value(MESSAGE_METADATA_FILE_LENGTH,
+                                           self._file_length)
+                                .set_value(MESSAGE_METADATA_FILE_VERSION,
+                                           self._file_version)
+                                .set_value(MESSAGE_METADATA_TOTAL_CHUNKS,
+                                           self._total_chunks)
+                                .set_value(MESSAGE_METADATA_CHUNK_INDEX,
+                                           self._chunk_index))
                   .set_content(Content().set_data(self._chunk_data)))
         m = self._class.from_packet(packet)
 
@@ -385,8 +406,10 @@ class TestUpdateFileStartRequestMessage(object):
         assert packet.get_header().get_type() == MESSAGE_TYPE_UPDATE_FILE_START
         assert packet.get_header().get_username() == TEST_USERNAME
         assert packet.get_header().get_session() == TEST_SESSION
-        assert packet.get_metadata().get_value(MESSAGE_SUBTYPE) == MESSAGE_SUBTYPE_REQUEST
-        assert packet.get_metadata().get_value(MESSAGE_METADATA_FILE_VERSION) == self._file_version
+        assert packet.get_metadata().get_value(MESSAGE_SUBTYPE) == (
+            MESSAGE_SUBTYPE_REQUEST)
+        assert self._file_version == (
+            packet.get_metadata().get_value(MESSAGE_METADATA_FILE_VERSION))
         assert packet.get_content().get_data() == self._file_path
 
     def test_from_packet(self):
@@ -396,7 +419,8 @@ class TestUpdateFileStartRequestMessage(object):
                               .set_username(TEST_USERNAME)
                               .set_session(TEST_SESSION))
                   .set_metadata(Metadata()
-                                .set_value(MESSAGE_METADATA_FILE_VERSION, self._file_version))
+                                .set_value(MESSAGE_METADATA_FILE_VERSION,
+                                           self._file_version))
                   .set_content(Content().set_data(self._file_path)))
         m = self._class.from_packet(packet)
 
@@ -442,8 +466,10 @@ class TestUpdateFileStartResponseMessage(object):
         assert packet.get_header().get_type() == MESSAGE_TYPE_UPDATE_FILE_START
         assert packet.get_header().get_username() == TEST_USERNAME
         assert packet.get_header().get_session() == TEST_SESSION
-        assert packet.get_metadata().get_value(MESSAGE_SUBTYPE) == MESSAGE_SUBTYPE_RESPONSE
-        assert packet.get_metadata().get_value(MESSAGE_METADATA_FILE_VERSION) == self._file_version
+        assert packet.get_metadata().get_value(MESSAGE_SUBTYPE) == (
+            MESSAGE_SUBTYPE_RESPONSE)
+        assert self._file_version == (
+            packet.get_metadata().get_value(MESSAGE_METADATA_FILE_VERSION))
         assert packet.get_content().get_data() == self._file_path
 
     def test_from_packet(self):
@@ -453,7 +479,8 @@ class TestUpdateFileStartResponseMessage(object):
                               .set_username(TEST_USERNAME)
                               .set_session(TEST_SESSION))
                   .set_metadata(Metadata()
-                                .set_value(MESSAGE_METADATA_FILE_VERSION, self._file_version))
+                                .set_value(MESSAGE_METADATA_FILE_VERSION,
+                                           self._file_version))
                   .set_content(Content().set_data(self._file_path)))
         m = self._class.from_packet(packet)
 
@@ -503,9 +530,12 @@ class TestUpdateFileDataResponseMessage(object):
         assert packet.get_header().get_type() == MESSAGE_TYPE_UPDATE_FILE_DATA
         assert packet.get_header().get_username() == TEST_USERNAME
         assert packet.get_header().get_session() == TEST_SESSION
-        assert packet.get_metadata().get_value(MESSAGE_SUBTYPE) == MESSAGE_SUBTYPE_RESPONSE
-        assert packet.get_metadata().get_value(MESSAGE_METADATA_FILE_VERSION) == self._file_version
-        assert packet.get_metadata().get_value(MESSAGE_METADATA_TOTAL_CHUNKS) == self._total_chunks
+        assert packet.get_metadata().get_value(MESSAGE_SUBTYPE) == (
+            MESSAGE_SUBTYPE_RESPONSE)
+        assert self._file_version == (
+            packet.get_metadata().get_value(MESSAGE_METADATA_FILE_VERSION))
+        assert self._total_chunks == (
+            packet.get_metadata().get_value(MESSAGE_METADATA_TOTAL_CHUNKS))
         assert packet.get_content().get_data() == self._chunks_received
 
     def test_from_packet(self):
@@ -515,8 +545,10 @@ class TestUpdateFileDataResponseMessage(object):
                               .set_username(TEST_USERNAME)
                               .set_session(TEST_SESSION))
                   .set_metadata(Metadata()
-                                .set_value(MESSAGE_METADATA_FILE_VERSION, self._file_version)
-                                .set_value(MESSAGE_METADATA_TOTAL_CHUNKS, self._total_chunks))
+                                .set_value(MESSAGE_METADATA_FILE_VERSION,
+                                           self._file_version)
+                                .set_value(MESSAGE_METADATA_TOTAL_CHUNKS,
+                                           self._total_chunks))
                   .set_content(Content().set_data(self._chunks_received)))
         m = self._class.from_packet(packet)
 
@@ -567,9 +599,12 @@ class TestFileChangeBroadcastMessage(object):
         assert packet.get_header().get_type() == MESSAGE_TYPE_FILE_CHANGED
         assert packet.get_header().get_username() == TEST_USERNAME
         assert packet.get_header().get_session() == TEST_SESSION
-        assert packet.get_metadata().get_value(MESSAGE_SUBTYPE) == MESSAGE_SUBTYPE_BROADCAST
-        assert packet.get_metadata().get_value(MESSAGE_METADATA_FILE_VERSION) == self._file_version
-        assert packet.get_metadata().get_value(MESSAGE_METADATA_FILE_LENGTH) == self._file_length
+        assert packet.get_metadata().get_value(MESSAGE_SUBTYPE) == (
+            MESSAGE_SUBTYPE_BROADCAST)
+        assert self._file_version == (
+            packet.get_metadata().get_value(MESSAGE_METADATA_FILE_VERSION))
+        assert self._file_length == (
+            packet.get_metadata().get_value(MESSAGE_METADATA_FILE_LENGTH))
         assert packet.get_content().get_data() == self._file_path
 
     def test_from_packet(self):
@@ -579,8 +614,10 @@ class TestFileChangeBroadcastMessage(object):
                               .set_username(TEST_USERNAME)
                               .set_session(TEST_SESSION))
                   .set_metadata(Metadata()
-                                .set_value(MESSAGE_METADATA_FILE_VERSION, self._file_version)
-                                .set_value(MESSAGE_METADATA_FILE_LENGTH, self._file_length))
+                                .set_value(MESSAGE_METADATA_FILE_VERSION,
+                                           self._file_version)
+                                .set_value(MESSAGE_METADATA_FILE_LENGTH,
+                                           self._file_length))
                   .set_content(Content().set_data(self._file_path)))
         m = self._class.from_packet(packet)
 

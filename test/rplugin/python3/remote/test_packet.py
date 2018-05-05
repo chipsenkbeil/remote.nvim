@@ -112,7 +112,9 @@ class TestPacket(object):
         assert Packet().set_header(header).get_header() == header
 
     def test_set_parent_header_success(self, parent_header):
-        assert Packet().set_parent_header(parent_header).get_parent_header() == parent_header
+        expected = parent_header
+        actual = Packet().set_parent_header(parent_header).get_parent_header()
+        assert actual == expected
 
     def test_set_metadata_success(self, metadata):
         assert Packet().set_metadata(metadata).get_metadata() == metadata
@@ -120,7 +122,13 @@ class TestPacket(object):
     def test_set_content_success(self, content):
         assert Packet().set_content(content).get_content() == content
 
-    def test_gen_signature_hmac_None(self, header, parent_header, metadata, content):
+    def test_gen_signature_hmac_None(
+        self,
+        header,
+        parent_header,
+        metadata,
+        content,
+    ):
         p = (Packet()
              .set_header(header)
              .set_parent_header(parent_header)
@@ -131,7 +139,12 @@ class TestPacket(object):
             hmac = None
             p.gen_signature(hmac)
 
-    def test_gen_signature_header_not_set(self, parent_header, metadata, content):
+    def test_gen_signature_header_not_set(
+        self,
+        parent_header,
+        metadata,
+        content,
+    ):
         p = (Packet()
              .set_parent_header(parent_header)
              .set_metadata(metadata)
@@ -141,7 +154,12 @@ class TestPacket(object):
             hmac = HMAC(b'12345')
             p.gen_signature(hmac)
 
-    def test_gen_signature_parent_header_not_set(self, header, metadata, content):
+    def test_gen_signature_parent_header_not_set(
+        self,
+        header,
+        metadata,
+        content,
+    ):
         p = (Packet()
              .set_header(header)
              .set_metadata(metadata)
@@ -151,7 +169,12 @@ class TestPacket(object):
             hmac = HMAC(b'12345')
             p.gen_signature(hmac)
 
-    def test_gen_signature_metadata_not_set(self, header, parent_header, content):
+    def test_gen_signature_metadata_not_set(
+        self,
+        header,
+        parent_header,
+        content
+    ):
         p = (Packet()
              .set_header(header)
              .set_parent_header(parent_header)
@@ -161,7 +184,12 @@ class TestPacket(object):
             hmac = HMAC(b'12345')
             p.gen_signature(hmac)
 
-    def test_gen_signature_content_not_set(self, header, parent_header, metadata):
+    def test_gen_signature_content_not_set(
+        self,
+        header,
+        parent_header,
+        metadata
+    ):
         p = (Packet()
              .set_header(header)
              .set_parent_header(parent_header)
@@ -171,7 +199,13 @@ class TestPacket(object):
             hmac = HMAC(b'12345')
             p.gen_signature(hmac)
 
-    def test_gen_signature_success(self, header, parent_header, metadata, content):
+    def test_gen_signature_success(
+        self,
+        header,
+        parent_header,
+        metadata,
+        content
+    ):
         p = (Packet()
              .set_header(header)
              .set_parent_header(parent_header)

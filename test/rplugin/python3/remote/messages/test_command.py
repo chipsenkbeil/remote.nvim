@@ -61,8 +61,10 @@ class TestCommandRequestMessage(object):
         assert packet.get_header().get_type() == MESSAGE_TYPE_COMMAND
         assert packet.get_header().get_username() == TEST_USERNAME
         assert packet.get_header().get_session() == TEST_SESSION
-        assert packet.get_metadata().get_value(MESSAGE_SUBTYPE) == MESSAGE_SUBTYPE_REQUEST
-        assert packet.get_content().get_data() == (self._command_name, self._command_args)
+        assert packet.get_metadata().get_value(MESSAGE_SUBTYPE) == (
+            MESSAGE_SUBTYPE_REQUEST)
+        assert packet.get_content().get_data() == (
+            self._command_name, self._command_args)
 
     def test_from_packet(self):
         packet = (Packet()
@@ -70,7 +72,8 @@ class TestCommandRequestMessage(object):
                               .set_id(TEST_ID)
                               .set_username(TEST_USERNAME)
                               .set_session(TEST_SESSION))
-                  .set_content(Content().set_data((self._command_name, self._command_args))))
+                  .set_content(Content().set_data(
+                      (self._command_name, self._command_args))))
         m = self._class.from_packet(packet)
 
         assert m.get_id() == TEST_ID
@@ -111,7 +114,8 @@ class TestCommandResponseMessage(object):
         assert packet.get_header().get_type() == MESSAGE_TYPE_COMMAND
         assert packet.get_header().get_username() == TEST_USERNAME
         assert packet.get_header().get_session() == TEST_SESSION
-        assert packet.get_metadata().get_value(MESSAGE_SUBTYPE) == MESSAGE_SUBTYPE_RESPONSE
+        assert packet.get_metadata().get_value(MESSAGE_SUBTYPE) == (
+            MESSAGE_SUBTYPE_RESPONSE)
         assert packet.get_content().get_data() == self._command_result
 
     def test_from_packet(self):

@@ -70,7 +70,8 @@ class TestErrorResponseMessage(object):
         assert packet.get_header().get_type() == MESSAGE_TYPE_ERROR
         assert packet.get_header().get_username() == TEST_USERNAME
         assert packet.get_header().get_session() == TEST_SESSION
-        assert packet.get_metadata().get_value(MESSAGE_SUBTYPE) == MESSAGE_SUBTYPE_RESPONSE
+        assert packet.get_metadata().get_value(MESSAGE_SUBTYPE) == (
+            MESSAGE_SUBTYPE_RESPONSE)
         assert packet.get_content().get_data() == self._error_text
 
     def test_from_packet(self):
@@ -132,7 +133,8 @@ class TestErrorBroadcastMessage(object):
         assert packet.get_header().get_type() == MESSAGE_TYPE_ERROR
         assert packet.get_header().get_username() == TEST_USERNAME
         assert packet.get_header().get_session() == TEST_SESSION
-        assert packet.get_metadata().get_value(MESSAGE_SUBTYPE) == MESSAGE_SUBTYPE_BROADCAST
+        assert packet.get_metadata().get_value(MESSAGE_SUBTYPE) == (
+            MESSAGE_SUBTYPE_BROADCAST)
         assert packet.get_content().get_data() == self._error_text
 
     def test_from_packet(self):

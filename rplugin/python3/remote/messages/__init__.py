@@ -16,6 +16,7 @@ def register(msg_class):
 
     :param msg_class: The message class
     """
-    assert issubclass(msg_class, BaseMessage), 'Class is not BaseMessage: %r' % msg_class
+    assert issubclass(msg_class, BaseMessage), (
+        'Class is not BaseMessage: %r' % msg_class)
     registry.register(msg_class)
     return msg_class
