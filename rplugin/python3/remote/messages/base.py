@@ -9,12 +9,7 @@ from .constants import *
 
 class BaseMessage(object):
     """Represents the base message type that all messages extend."""
-
-    _id = None
-    _username = None
-    _session = None
     _type = None  # To be filled in by subclasses
-    _parent = None
 
     def __init__(
         self,
@@ -43,21 +38,24 @@ class BaseMessage(object):
     def get_parent(self):
         return self._parent
 
-    def is_request(self):
+    @staticmethod
+    def is_request():
         """Indicates if this message represents a request.
 
         :returns: True if a request, otherwise False
         """
         raise NotImplementedError()
 
-    def is_response(self):
+    @staticmethod
+    def is_response():
         """Indicates if this message represents a response.
 
         :returns: True if a response, otherwise False
         """
         raise NotImplementedError()
 
-    def is_broadcast(self):
+    @staticmethod
+    def is_broadcast():
         """Indicates if this message represents a broadcast.
 
         :returns: True if a broadcast, otherwise False
@@ -101,21 +99,24 @@ class BaseRequestMessage(BaseMessage):
     def __init__(self, id, username, session, parent=None):
         super().__init__(id, username, session, parent)
 
-    def is_request(self):
+    @staticmethod
+    def is_request():
         """Indicates if this message represents a request.
 
         :returns: True if a request, otherwise False
         """
         return True
 
-    def is_response(self):
+    @staticmethod
+    def is_response():
         """Indicates if this message represents a response.
 
         :returns: True if a response, otherwise False
         """
         return False
 
-    def is_broadcast(self):
+    @staticmethod
+    def is_broadcast():
         """Indicates if this message represents a broadcast.
 
         :returns: True if a broadcast, otherwise False
@@ -139,21 +140,24 @@ class BaseResponseMessage(BaseMessage):
     def __init__(self, id, username, session, parent=None):
         super().__init__(id, username, session, parent)
 
-    def is_request(self):
+    @staticmethod
+    def is_request():
         """Indicates if this message represents a request.
 
         :returns: True if a request, otherwise False
         """
         return False
 
-    def is_response(self):
+    @staticmethod
+    def is_response():
         """Indicates if this message represents a response.
 
         :returns: True if a response, otherwise False
         """
         return True
 
-    def is_broadcast(self):
+    @staticmethod
+    def is_broadcast():
         """Indicates if this message represents a broadcast.
 
         :returns: True if a broadcast, otherwise False
@@ -177,21 +181,24 @@ class BaseBroadcastMessage(BaseMessage):
     def __init__(self, id, username, session, parent=None):
         super().__init__(id, username, session, parent)
 
-    def is_request(self):
+    @staticmethod
+    def is_request():
         """Indicates if this message represents a request.
 
         :returns: True if a request, otherwise False
         """
         return False
 
-    def is_response(self):
+    @staticmethod
+    def is_response():
         """Indicates if this message represents a response.
 
         :returns: True if a response, otherwise False
         """
         return False
 
-    def is_broadcast(self):
+    @staticmethod
+    def is_broadcast():
         """Indicates if this message represents a broadcast.
 
         :returns: True if a broadcast, otherwise False

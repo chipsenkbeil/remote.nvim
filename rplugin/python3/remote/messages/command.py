@@ -9,8 +9,6 @@ from .constants import *
 
 class CommandRequestMessage(BaseRequestMessage):
     _type = MESSAGE_TYPE_COMMAND
-    _command_name = None
-    _command_args = None
 
     def __init__(
         self,
@@ -58,7 +56,6 @@ class CommandRequestMessage(BaseRequestMessage):
 
 class CommandResponseMessage(BaseResponseMessage):
     _type = MESSAGE_TYPE_COMMAND
-    _command_result = None
 
     def __init__(
         self,

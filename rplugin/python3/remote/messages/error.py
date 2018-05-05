@@ -10,7 +10,6 @@ from .constants import *
 
 class ErrorResponseMessage(BaseResponseMessage):
     _type = MESSAGE_TYPE_ERROR
-    _error_text = None
 
     def __init__(
         self,
@@ -52,7 +51,6 @@ class ErrorResponseMessage(BaseResponseMessage):
 
 class ErrorBroadcastMessage(BaseBroadcastMessage):
     _type = MESSAGE_TYPE_ERROR
-    _error_text = None
 
     def __init__(
         self,

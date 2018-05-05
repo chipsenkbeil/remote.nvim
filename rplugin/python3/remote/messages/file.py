@@ -10,7 +10,6 @@ from .constants import *
 ###############################################################################
 class FileListRequestMessage(BaseRequestMessage):
     _type = MESSAGE_TYPE_FILE_LIST
-    _path = None
 
     def __init__(
         self,
@@ -45,7 +44,6 @@ class FileListRequestMessage(BaseRequestMessage):
 ###############################################################################
 class FileListResponseMessage(BaseResponseMessage):
     _type = MESSAGE_TYPE_FILE_LIST
-    _file_list = None
 
     def __init__(
         self,
@@ -86,7 +84,6 @@ class FileListResponseMessage(BaseResponseMessage):
 ###############################################################################
 class RetrieveFileRequestMessage(BaseRequestMessage):
     _type = MESSAGE_TYPE_RETRIEVE_FILE
-    _file_path = None
 
     def __init__(
         self,
@@ -125,11 +122,6 @@ class RetrieveFileRequestMessage(BaseRequestMessage):
 ###############################################################################
 class RetrieveFileResponseMessage(BaseResponseMessage):
     _type = MESSAGE_TYPE_RETRIEVE_FILE
-    _file_length = None
-    _file_version = None
-    _total_chunks = None
-    _chunk_index = None
-    _chunk_data = None
 
     def __init__(
         self,
@@ -213,8 +205,6 @@ class RetrieveFileResponseMessage(BaseResponseMessage):
 ###############################################################################
 class UpdateFileStartRequestMessage(BaseRequestMessage):
     _type = MESSAGE_TYPE_UPDATE_FILE_START
-    _file_path = None
-    _file_version = None
 
     def __init__(
         self,
@@ -265,8 +255,6 @@ class UpdateFileStartRequestMessage(BaseRequestMessage):
 ###############################################################################
 class UpdateFileStartResponseMessage(BaseResponseMessage):
     _type = MESSAGE_TYPE_UPDATE_FILE_START
-    _file_path = None
-    _file_version = None
 
     def __init__(
         self,
@@ -318,11 +306,6 @@ class UpdateFileStartResponseMessage(BaseResponseMessage):
 ###############################################################################
 class UpdateFileDataRequestMessage(BaseRequestMessage):
     _type = MESSAGE_TYPE_UPDATE_FILE_DATA
-    _file_length = None
-    _file_version = None
-    _total_chunks = None
-    _chunk_index = None
-    _chunk_data = None
 
     def __init__(
         self,
@@ -406,9 +389,6 @@ class UpdateFileDataRequestMessage(BaseRequestMessage):
 ###############################################################################
 class UpdateFileDataResponseMessage(BaseResponseMessage):
     _type = MESSAGE_TYPE_UPDATE_FILE_DATA
-    _file_version = None
-    _chunks_received = None
-    _total_chunks = None
 
     def __init__(
         self,
@@ -472,9 +452,6 @@ class UpdateFileDataResponseMessage(BaseResponseMessage):
 ###############################################################################
 class FileChangeBroadcastMessage(BaseBroadcastMessage):
     _type = MESSAGE_TYPE_FILE_CHANGED
-    _file_path = None
-    _file_version = None
-    _file_length = None
 
     def __init__(
         self,

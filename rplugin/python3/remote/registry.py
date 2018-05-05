@@ -3,12 +3,12 @@
 # AUTHOR: Chip Senkbeil <chip.senkbeil at gmail.cop>
 # License: Apache 2.0 License
 # =============================================================================
-
 from .messages.constants import *
 
 
 class MessageRegistry(object):
-    _registry = {}
+    def __init__(self):
+        self._registry = {}
 
     def register(self, message_class):
         """Registers a message class by type and subtype.
@@ -20,11 +20,11 @@ class MessageRegistry(object):
         if (t not in self._registry):
             self._registry[t] = {}
 
-        if (message_class.is_request(None)):
+        if (message_class.is_request()):
             self._registry[t][MESSAGE_SUBTYPE_REQUEST] = message_class
-        if (message_class.is_response(None)):
+        if (message_class.is_response()):
             self._registry[t][MESSAGE_SUBTYPE_RESPONSE] = message_class
-        if (message_class.is_broadcast(None)):
+        if (message_class.is_broadcast()):
             self._registry[t][MESSAGE_SUBTYPE_BROADCAST] = message_class
 
     def lookup(self, msg_type, msg_subtype):
@@ -42,8 +42,9 @@ class MessageRegistry(object):
             return None
 
 
-class MessageActionRegistry(object):
-    _registry = {}
+class ActionRegistry(object):
+    def __init__(self):
+        self._registry = {}
 
     def register(self, message_class, action):
         """Registers an action to be performed when a message of the following
