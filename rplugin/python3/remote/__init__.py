@@ -3,12 +3,11 @@
 # AUTHOR: Chip Senkbeil <chip.senkbeil at gmail.com>
 # License: Apache 2.0 License
 # =============================================================================
-
 import neovim
-from remote.client import RemoteClient
-from remote.server import RemoteServer
-from remote.utils import is_int, to_int
-from remote import logger
+from .client import RemoteClient
+from .server import RemoteServer
+from .utils import is_int, to_int
+from . import logger
 
 
 @neovim.plugin

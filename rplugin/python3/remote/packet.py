@@ -7,7 +7,7 @@ import msgpack
 from hmac import HMAC
 from uuid import uuid4
 from datetime import datetime
-from remote import security
+from . import security
 
 # Maximum UDP datagram size for IPv4 is 65,507 bytes
 MAX_PACKET_SIZE = 65507

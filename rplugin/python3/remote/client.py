@@ -5,8 +5,8 @@
 # =============================================================================
 import asyncio
 from asyncio import DatagramProtocol
-from remote import logger
-from remote.packet import Packet
+from . import logger
+from .packet import Packet
 
 
 class RemoteClient(logger.LoggingMixin):
@@ -93,7 +93,9 @@ class RemoteClientProtocol(DatagramProtocol, logger.LoggingMixin):
                 self.transport.sendto(packet.to_bytes(), addr)
                 self.info('New data: %s' % packet)
                 self.nvim.async_call(lambda nvim, msg, addr: nvim.out_write(
-                    'Received %r from %s\n' % (msg, addr)), self.nvim, packet, addr)
+                                     'Received %r from %s\n' % (msg, addr)),
+                                     self.nvim, packet, addr)
             except Exception as ex:
                 self.nvim.async_call(lambda nvim, ex: nvim.err_write(
-                    'Exception %s\n' % ex), self.nvim, ex)
+                                     'Exception %s\n' % ex),
+                                     self.nvim, ex)
