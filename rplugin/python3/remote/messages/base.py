@@ -5,19 +5,7 @@
 # =============================================================================
 from uuid import uuid4
 from ..packet import *
-
-# Represents overall message api version
-MESSAGE_API_VERSION = '0.1'
-
-# Represents the subtype this message represents
-MESSAGE_SUBTYPE = 'SUBTYPE'
-MESSAGE_SUBTYPE_REQUEST = 'REQUEST'
-MESSAGE_SUBTYPE_RESPONSE = 'RESPONSE'
-MESSAGE_SUBTYPE_BROADCAST = 'BROADCAST'
-
-MESSAGE_DEFAULT_USERNAME = '<UNKNOWN>'
-MESSAGE_DEFAULT_SESSION = '<UNKNOWN>'
-
+from .constants import *
 
 class BaseMessage(object):
     """Represents the base message type that all messages extend."""

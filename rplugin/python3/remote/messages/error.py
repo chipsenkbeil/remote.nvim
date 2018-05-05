@@ -4,14 +4,8 @@
 # License: Apache 2.0 License
 # =============================================================================
 from uuid import uuid4
-from ..packet import *
 from .base import *
-
-# Represents the types of messages request/response/broadcast
-MESSAGE_TYPE_ERROR = 'ERROR'
-
-# Defaults for non-provided data
-MESSAGE_DEFAULT_ERROR_TEXT = '<ERROR>'
+from .constants import *
 
 
 class ErrorResponseMessage(BaseResponseMessage):

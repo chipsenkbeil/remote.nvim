@@ -4,16 +4,8 @@
 # License: Apache 2.0 License
 # =============================================================================
 from uuid import uuid4
-from ..packet import *
 from .base import *
-
-# Represents the types of messages request/response/broadcast
-MESSAGE_TYPE_COMMAND = 'COMMAND'
-
-# Defaults for non-provided data
-MESSAGE_DEFAULT_COMMAND_NAME = '<NAME>'
-MESSAGE_DEFAULT_COMMAND_ARGS = '<ARGS>'
-
+from .constants import *
 
 class CommandRequestMessage(BaseRequestMessage):
     _type = MESSAGE_TYPE_COMMAND
