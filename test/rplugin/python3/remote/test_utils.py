@@ -52,20 +52,20 @@ def test_find_subclasses_no_subclasses():
     assert len(find_subclasses(A)) == 0
 
 
-def test_find_subclasses_one_level_subclasses():
+def test_find_subclasses_top_level_subclasses_only():
     class A():
         pass
 
     class B(A):
         pass
 
-    class C(A):
+    class C(B):
         pass
 
-    subclasses = find_subclasses(A)
-    assert len(subclasses) == 2
+    subclasses = find_subclasses(A, include_indirect=False)
+    assert len(subclasses) == 1
     assert B in subclasses
-    assert C in subclasses
+    assert C not in subclasses
 
 
 def test_find_subclasses_multi_level_subclasses():
@@ -78,7 +78,7 @@ def test_find_subclasses_multi_level_subclasses():
     class C(B):
         pass
 
-    subclasses = find_subclasses(A)
+    subclasses = find_subclasses(A, include_indirect=True)
     assert len(subclasses) == 2
     assert B in subclasses
     assert C in subclasses

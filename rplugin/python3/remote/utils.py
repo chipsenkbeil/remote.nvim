@@ -29,24 +29,30 @@ def is_int(s):
     return to_int(s) is not None
 
 
-def find_subclasses(cl):
+def find_subclasses(cl, include_indirect=True):
     """Finds all classes that subclass the provided class, even indirectly.
 
     :param cl: The class whose subclasses to find
+    :param include_indirect: If True, will retrieve indirect subclasses,
+                             otherwise will only return top-level subclasses
     :returns: A list of class objects representing the subclasses
     """
     assert isinstance(cl, type)
-
     class_list = []
-    queue = []
 
-    # Enqueue top-level class
-    queue.append(cl)
+    if (include_indirect):
+        queue = []
 
-    while (len(queue) > 0):
-        next_class = queue.pop(0)  # Dequeue next class to search
-        class_list.append(next_class)
-        queue.extend(next_class.__subclasses__())
+        # Enqueue top-level class
+        queue.append(cl)
+
+        while (len(queue) > 0):
+            next_class = queue.pop(0)  # Dequeue next class to search
+            class_list.append(next_class)
+            queue.extend(next_class.__subclasses__())
+    else:
+        class_list = [cl]
+        class_list.extend(cl.__subclasses__())
 
     # Return all classes but the first since that is the class we started with
     return class_list[1:]
