@@ -4,7 +4,6 @@
 # License: Apache 2.0 License
 # =============================================================================
 from uuid import uuid4
-from . import register
 from .base import (
     BaseBroadcastMessage,
     BaseResponseMessage,
@@ -17,7 +16,6 @@ from .constants import (
 )
 
 
-@register
 class ErrorResponseMessage(BaseResponseMessage):
     _type = MESSAGE_TYPE_ERROR
 
@@ -59,7 +57,6 @@ class ErrorResponseMessage(BaseResponseMessage):
         )
 
 
-@register
 class ErrorBroadcastMessage(BaseBroadcastMessage):
     _type = MESSAGE_TYPE_ERROR
 

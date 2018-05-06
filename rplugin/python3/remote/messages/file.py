@@ -4,7 +4,6 @@
 # License: Apache 2.0 License
 # =============================================================================
 from uuid import uuid4
-from . import register
 from .base import (
     BaseBroadcastMessage,
     BaseRequestMessage,
@@ -34,7 +33,6 @@ from .constants import (
 
 
 ###############################################################################
-@register
 class FileListRequestMessage(BaseRequestMessage):
     _type = MESSAGE_TYPE_FILE_LIST
 
@@ -69,7 +67,6 @@ class FileListRequestMessage(BaseRequestMessage):
 
 
 ###############################################################################
-@register
 class FileListResponseMessage(BaseResponseMessage):
     _type = MESSAGE_TYPE_FILE_LIST
 
@@ -110,7 +107,6 @@ class FileListResponseMessage(BaseResponseMessage):
 
 
 ###############################################################################
-@register
 class RetrieveFileRequestMessage(BaseRequestMessage):
     _type = MESSAGE_TYPE_RETRIEVE_FILE
 
@@ -149,7 +145,6 @@ class RetrieveFileRequestMessage(BaseRequestMessage):
 
 
 ###############################################################################
-@register
 class RetrieveFileResponseMessage(BaseResponseMessage):
     _type = MESSAGE_TYPE_RETRIEVE_FILE
 
@@ -223,17 +218,20 @@ class RetrieveFileResponseMessage(BaseResponseMessage):
             id=packet.get_header().get_id(),
             username=packet.get_header().get_username(),
             session=packet.get_header().get_session(),
-            file_length=packet.get_metadata().get_value(MESSAGE_METADATA_FILE_LENGTH),
-            file_version=packet.get_metadata().get_value(MESSAGE_METADATA_FILE_VERSION),
-            chunk_index=packet.get_metadata().get_value(MESSAGE_METADATA_CHUNK_INDEX),
-            total_chunks=packet.get_metadata().get_value(MESSAGE_METADATA_TOTAL_CHUNKS),
+            file_length=packet.get_metadata().get_value(
+                MESSAGE_METADATA_FILE_LENGTH),
+            file_version=packet.get_metadata().get_value(
+                MESSAGE_METADATA_FILE_VERSION),
+            chunk_index=packet.get_metadata().get_value(
+                MESSAGE_METADATA_CHUNK_INDEX),
+            total_chunks=packet.get_metadata().get_value(
+                MESSAGE_METADATA_TOTAL_CHUNKS),
             chunk_data=packet.get_content().get_data(),
             parent=None,
         )
 
 
 ###############################################################################
-@register
 class UpdateFileStartRequestMessage(BaseRequestMessage):
     _type = MESSAGE_TYPE_UPDATE_FILE_START
 
@@ -278,13 +276,13 @@ class UpdateFileStartRequestMessage(BaseRequestMessage):
             username=packet.get_header().get_username(),
             session=packet.get_header().get_session(),
             file_path=packet.get_content().get_data(),
-            file_version=packet.get_metadata().get_value(MESSAGE_METADATA_FILE_VERSION),
+            file_version=packet.get_metadata().get_value(
+                MESSAGE_METADATA_FILE_VERSION),
             parent=None,
         )
 
 
 ###############################################################################
-@register
 class UpdateFileStartResponseMessage(BaseResponseMessage):
     _type = MESSAGE_TYPE_UPDATE_FILE_START
 
@@ -330,13 +328,13 @@ class UpdateFileStartResponseMessage(BaseResponseMessage):
             username=packet.get_header().get_username(),
             session=packet.get_header().get_session(),
             file_path=packet.get_content().get_data(),
-            file_version=packet.get_metadata().get_value(MESSAGE_METADATA_FILE_VERSION),
+            file_version=packet.get_metadata().get_value(
+                MESSAGE_METADATA_FILE_VERSION),
             parent=None,
         )
 
 
 ###############################################################################
-@register
 class UpdateFileDataRequestMessage(BaseRequestMessage):
     _type = MESSAGE_TYPE_UPDATE_FILE_DATA
 
@@ -410,17 +408,20 @@ class UpdateFileDataRequestMessage(BaseRequestMessage):
             id=packet.get_header().get_id(),
             username=packet.get_header().get_username(),
             session=packet.get_header().get_session(),
-            file_length=packet.get_metadata().get_value(MESSAGE_METADATA_FILE_LENGTH),
-            file_version=packet.get_metadata().get_value(MESSAGE_METADATA_FILE_VERSION),
-            chunk_index=packet.get_metadata().get_value(MESSAGE_METADATA_CHUNK_INDEX),
-            total_chunks=packet.get_metadata().get_value(MESSAGE_METADATA_TOTAL_CHUNKS),
+            file_length=packet.get_metadata().get_value(
+                MESSAGE_METADATA_FILE_LENGTH),
+            file_version=packet.get_metadata().get_value(
+                MESSAGE_METADATA_FILE_VERSION),
+            chunk_index=packet.get_metadata().get_value(
+                MESSAGE_METADATA_CHUNK_INDEX),
+            total_chunks=packet.get_metadata().get_value(
+                MESSAGE_METADATA_TOTAL_CHUNKS),
             chunk_data=packet.get_content().get_data(),
             parent=None,
         )
 
 
 ###############################################################################
-@register
 class UpdateFileDataResponseMessage(BaseResponseMessage):
     _type = MESSAGE_TYPE_UPDATE_FILE_DATA
 
@@ -476,15 +477,16 @@ class UpdateFileDataResponseMessage(BaseResponseMessage):
             id=packet.get_header().get_id(),
             username=packet.get_header().get_username(),
             session=packet.get_header().get_session(),
-            file_version=packet.get_metadata().get_value(MESSAGE_METADATA_FILE_VERSION),
-            total_chunks=packet.get_metadata().get_value(MESSAGE_METADATA_TOTAL_CHUNKS),
+            file_version=packet.get_metadata().get_value(
+                MESSAGE_METADATA_FILE_VERSION),
+            total_chunks=packet.get_metadata().get_value(
+                MESSAGE_METADATA_TOTAL_CHUNKS),
             chunks_received=packet.get_content().get_data(),
             parent=None,
         )
 
 
 ###############################################################################
-@register
 class FileChangeBroadcastMessage(BaseBroadcastMessage):
     _type = MESSAGE_TYPE_FILE_CHANGED
 
@@ -539,7 +541,9 @@ class FileChangeBroadcastMessage(BaseBroadcastMessage):
             username=packet.get_header().get_username(),
             session=packet.get_header().get_session(),
             file_path=packet.get_content().get_data(),
-            file_version=packet.get_metadata().get_value(MESSAGE_METADATA_FILE_VERSION),
-            file_length=packet.get_metadata().get_value(MESSAGE_METADATA_FILE_LENGTH),
+            file_version=packet.get_metadata().get_value(
+                MESSAGE_METADATA_FILE_VERSION),
+            file_length=packet.get_metadata().get_value(
+                MESSAGE_METADATA_FILE_LENGTH),
             parent=None,
         )
