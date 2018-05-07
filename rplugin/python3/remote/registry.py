@@ -21,6 +21,10 @@ class MessageRegistry(object):
         """
         t = message_class._type
 
+        # If no type found, exit
+        if (t is None):
+            return
+
         if (t not in self._registry):
             self._registry[t] = {}
 

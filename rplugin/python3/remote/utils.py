@@ -3,6 +3,9 @@
 # AUTHOR: Chip Senkbeil <chip.senkbeil at gmail.com>
 # License: Apache 2.0 License
 # =============================================================================
+import glob
+import importlib
+import os
 
 
 def to_int(s, default=None):
@@ -56,3 +59,32 @@ def find_subclasses(cl, include_indirect=True):
 
     # Return all classes but the first since that is the class we started with
     return class_list[1:]
+
+
+def load_all_modules(base_dir, base_pkg, exclusions=[]):
+    """Dynamically loads all modules at the root of the base directory using
+    the provided base package as the package to load them in.
+
+    :param base_dir: The directory whose python files to load as modules
+    :param base_pkg: The base package to use when loading modules
+    :param exclusions: If included, will exclude any module whose package name
+                       matches the provided
+    :returns: The loaded modules
+    """
+    mods = []
+
+    # Load all modules immediately
+    glob_str = os.path.join(base_dir, '**', '*.py')
+    for location in glob.iglob(glob_str, recursive=True):
+        name = base_pkg + '.' + os.path.splitext(os.path.basename(location))[0]
+
+        if (name in exclusions):
+            continue
+
+        spec = importlib.util.spec_from_file_location(name, location)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        mods.append(mod)
+
+    # Return loaded modules
+    return mods

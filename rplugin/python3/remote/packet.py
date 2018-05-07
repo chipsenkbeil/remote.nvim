@@ -28,6 +28,14 @@ class Packet(object):
     _content = None
 
     @staticmethod
+    def empty():
+        return (Packet()
+                .set_parent_header(Header.empty())
+                .set_header(Header.empty())
+                .set_metadata(Metadata.empty())
+                .set_content(Content.empty()))
+
+    @staticmethod
     def name():
         return '__packet__'
 
