@@ -29,7 +29,10 @@ class RemoteServer(logger.LoggingMixin):
         if (not self.is_running()):
             raise Exception('Server is not running or listening!')
 
-        self.transport.sendto(data.encode(), addr)
+        if isinstance(data, str):
+            data = data.encode()
+
+        self.transport.sendto(data, addr)
 
     def run(self, cb):
         """Starts the remote server, adding it to the event loop and running

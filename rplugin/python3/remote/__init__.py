@@ -8,6 +8,10 @@ from .client import RemoteClient
 from .server import RemoteServer
 from .utils import is_int, to_int
 from . import logger
+from .messages.file import (
+    UpdateFileDataRequestMessage,
+    UpdateFileStartRequestMessage,
+)
 
 
 @neovim.plugin
@@ -134,4 +138,13 @@ class RemoteHandlers(logger.LoggingMixin):
 
         :param filename: The full path to the file relative to neovim
         """
-        self.nvim.out_write('Updated ' + filename + '\n')
+        if (self.client is not None):
+            m = UpdateFileStartRequestMessage(
+                file_path=filename,
+                file_version=1.0,
+            )
+            # TODO: Generate signature when creating packet
+            p = m.to_packet().gen_signature(self.client.hmac)
+            self.client.send(p.to_bytes())
+        if (self.server is not None):
+            self.server.send()

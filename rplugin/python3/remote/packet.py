@@ -119,6 +119,7 @@ class Packet(object):
     def gen_signature(self, hmac):
         """Generates a signature for the packet based on its properties."""
         self._signature = self._gen_signature(hmac)
+        return self
 
     def _gen_signature(self, hmac):
         assert isinstance(hmac, HMAC)
@@ -194,6 +195,7 @@ class Header(object):
         return (Header()
                 .set_id('')
                 .set_username('')
+                .set_session('')
                 .set_date_now()
                 .set_type('')
                 .set_version(''))

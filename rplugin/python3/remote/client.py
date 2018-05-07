@@ -7,6 +7,7 @@ import asyncio
 from asyncio import DatagramProtocol
 from . import logger
 from .packet import Packet
+from .security import new_hmac_from_key
 
 
 class RemoteClient(logger.LoggingMixin):
@@ -19,6 +20,7 @@ class RemoteClient(logger.LoggingMixin):
         self.info['port'] = port
         self.info['key'] = key
 
+        self.hmac = new_hmac_from_key(key)
         self.loop = None
         self.transport = None
         self.protocol = None
@@ -30,7 +32,10 @@ class RemoteClient(logger.LoggingMixin):
         if (not self.is_running()):
             raise Exception('Client is not running or connected!')
 
-        self.transport.sendto(data.encode())
+        if isinstance(data, str):
+            data = data.encode()
+
+        self.transport.sendto(data)
         self.nvim.out_write('Sent "{}"\n'.format(data))
 
     def run(self, cb):
