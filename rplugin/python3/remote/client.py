@@ -8,6 +8,7 @@ from asyncio import DatagramProtocol
 from . import logger
 from .packet import Packet
 from .security import new_hmac_from_key
+from .messages import packet_to_message
 
 
 class RemoteClient(logger.LoggingMixin):
@@ -48,7 +49,7 @@ class RemoteClient(logger.LoggingMixin):
         """
         self.loop = asyncio.get_event_loop()
         connect = self.loop.create_datagram_endpoint(
-            lambda: RemoteClientProtocol(self.nvim),
+            lambda: RemoteClientProtocol(self.nvim, self.hmac),
             remote_addr=(self.info['addr'], self.info['port'])
         )
 
@@ -74,8 +75,9 @@ class RemoteClient(logger.LoggingMixin):
 
 
 class RemoteClientProtocol(DatagramProtocol, logger.LoggingMixin):
-    def __init__(self, nvim):
+    def __init__(self, nvim, hmac):
         self.nvim = nvim
+        self.hmac = hmac
         self.is_debug_enabled = True
         self.transport = None
 
@@ -95,11 +97,14 @@ class RemoteClientProtocol(DatagramProtocol, logger.LoggingMixin):
 
             try:
                 packet = Packet.read(data)
-                self.transport.sendto(packet.to_bytes(), addr)
-                self.info('New data: %s' % packet)
-                self.nvim.async_call(lambda nvim, msg, addr: nvim.out_write(
-                                     'Received %r from %s\n' % (msg, addr)),
-                                     self.nvim, packet, addr)
+                is_valid = packet.is_signature_valid(self.hmac)
+                msg = packet_to_message(packet)
+                self.info('New data: %s\nValid: %s' % (msg, is_valid))
+                #self.transport.sendto(packet.to_bytes(), addr)
+                self.info('New data: %s' % msg)
+                self.nvim.async_call(lambda nvim, msg, addr, valid: nvim.out_write(
+                    'Received %r from %s\nValid: %s\n' % (msg, addr, valid)),
+                                     self.nvim, msg, addr, is_valid)
             except Exception as ex:
                 self.nvim.async_call(lambda nvim, ex: nvim.err_write(
                                      'Exception %s\n' % ex),

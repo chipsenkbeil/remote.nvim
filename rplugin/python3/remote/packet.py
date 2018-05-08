@@ -140,7 +140,7 @@ class Packet(object):
 
     def is_signature_valid(self, hmac):
         """Indicates whether the signature of the packet is valid."""
-        sig = self._genSignature(hmac)
+        sig = self._gen_signature(hmac)
         return self._signature == sig
 
     def to_bytes(self):

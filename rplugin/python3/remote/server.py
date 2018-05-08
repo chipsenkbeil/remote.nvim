@@ -6,6 +6,8 @@
 from asyncio import DatagramProtocol
 from . import logger
 from .packet import Packet
+from .security import new_hmac_from_key
+from .messages import packet_to_message
 
 
 class RemoteServer(logger.LoggingMixin):
@@ -19,6 +21,7 @@ class RemoteServer(logger.LoggingMixin):
         self.info['port'] = port
         self.info['key'] = key
 
+        self.hmac = new_hmac_from_key(key)
         self.transport = None
         self.protocol = None
 
@@ -43,7 +46,7 @@ class RemoteServer(logger.LoggingMixin):
         :param cb: The callback to invoke when the server is ready
         """
         listen = self.loop.create_datagram_endpoint(
-            lambda: RemoteServerProtocol(self.nvim),
+            lambda: RemoteServerProtocol(self.nvim, self.hmac),
             local_addr=(self.info['addr'], self.info['port'])
         )
 
@@ -69,8 +72,9 @@ class RemoteServer(logger.LoggingMixin):
 
 
 class RemoteServerProtocol(DatagramProtocol, logger.LoggingMixin):
-    def __init__(self, nvim):
+    def __init__(self, nvim, hmac):
         self.nvim = nvim
+        self.hmac = hmac
         self.transport = None
         self.is_debug_enabled = True
 
@@ -90,11 +94,13 @@ class RemoteServerProtocol(DatagramProtocol, logger.LoggingMixin):
 
             try:
                 packet = Packet.read(data)
+                is_valid = packet.is_signature_valid(self.hmac)
+                msg = packet_to_message(packet)
                 self.transport.sendto(packet.to_bytes(), addr)
-                self.info('New data: %s' % packet)
-                self.nvim.async_call(lambda nvim, msg, addr: nvim.out_write(
-                                     'Received %r from %s\n' % (msg, addr)),
-                                     self.nvim, packet, addr)
+                self.info('New data: %s\nValid: %s' % (msg, is_valid))
+                self.nvim.async_call(lambda nvim, msg, addr, valid: nvim.out_write(
+                    'Received %r from %s\nValid: %s\n' % (msg, addr, valid)),
+                                     self.nvim, msg, addr, is_valid)
             except Exception as ex:
                 self.nvim.async_call(lambda nvim, ex: nvim.err_write(
                                      'Exception %s\n' % ex),

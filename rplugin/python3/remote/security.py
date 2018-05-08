@@ -3,7 +3,6 @@
 # AUTHOR: Chip Senkbeil <chip.senkbeil at gmail.com>
 # License: Apache 2.0 License
 # =============================================================================
-
 from hmac import HMAC
 from hashlib import sha256
 
