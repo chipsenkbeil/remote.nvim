@@ -5,8 +5,8 @@
 # =============================================================================
 from uuid import uuid4
 from .base import (
-    BaseRequestMessage,
-    BaseResponseMessage,
+    BaseRequest,
+    BaseResponse,
 )
 from .constants import (
     MESSAGE_DEFAULT_COMMAND_ARGS,
@@ -17,7 +17,7 @@ from .constants import (
 )
 
 
-class CommandRequestMessage(BaseRequestMessage):
+class CommandRequest(BaseRequest):
     _type = MESSAGE_TYPE_COMMAND
 
     def __init__(
@@ -54,7 +54,7 @@ class CommandRequestMessage(BaseRequestMessage):
 
     @staticmethod
     def from_packet(packet):
-        return CommandRequestMessage(
+        return CommandRequest(
             id=packet.get_header().get_id(),
             username=packet.get_header().get_username(),
             session=packet.get_header().get_session(),
@@ -64,7 +64,7 @@ class CommandRequestMessage(BaseRequestMessage):
         )
 
 
-class CommandResponseMessage(BaseResponseMessage):
+class CommandResponse(BaseResponse):
     _type = MESSAGE_TYPE_COMMAND
 
     def __init__(
@@ -92,7 +92,7 @@ class CommandResponseMessage(BaseResponseMessage):
 
     @staticmethod
     def from_packet(packet):
-        return CommandResponseMessage(
+        return CommandResponse(
             id=packet.get_header().get_id(),
             username=packet.get_header().get_username(),
             session=packet.get_header().get_session(),

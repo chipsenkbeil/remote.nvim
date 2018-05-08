@@ -17,8 +17,8 @@ from remote.messages.constants import (
     MESSAGE_SUBTYPE_RESPONSE,
 )
 from remote.messages.error import (
-    ErrorBroadcastMessage,
-    ErrorResponseMessage,
+    ErrorBroadcast,
+    ErrorResponse,
 )
 
 TEST_ID = 12345
@@ -27,8 +27,8 @@ TEST_SESSION = 'mysession'
 
 
 ###############################################################################
-class TestErrorResponseMessage(object):
-    _class = ErrorResponseMessage
+class TestErrorResponse(object):
+    _class = ErrorResponse
     _error_text = 'some error'
 
     def test_constructor(self):
@@ -90,8 +90,8 @@ class TestErrorResponseMessage(object):
 
 
 ###############################################################################
-class TestErrorBroadcastMessage(object):
-    _class = ErrorBroadcastMessage
+class TestErrorBroadcast(object):
+    _class = ErrorBroadcast
     _error_text = 'some error'
 
     def test_constructor(self):

@@ -17,8 +17,8 @@ from remote.messages.constants import (
     MESSAGE_SUBTYPE_RESPONSE,
 )
 from remote.messages.command import (
-    CommandRequestMessage,
-    CommandResponseMessage,
+    CommandRequest,
+    CommandResponse,
 )
 
 TEST_ID = 12345
@@ -27,8 +27,8 @@ TEST_SESSION = 'mysession'
 
 
 ###############################################################################
-class TestCommandRequestMessage(object):
-    _class = CommandRequestMessage
+class TestCommandRequest(object):
+    _class = CommandRequest
     _command_name = 'CommandName'
     _command_args = 'some args'
 
@@ -84,8 +84,8 @@ class TestCommandRequestMessage(object):
 
 
 ###############################################################################
-class TestCommandResponseMessage(object):
-    _class = CommandResponseMessage
+class TestCommandResponse(object):
+    _class = CommandResponse
     _command_result = 'some result'
 
     def test_constructor(self):

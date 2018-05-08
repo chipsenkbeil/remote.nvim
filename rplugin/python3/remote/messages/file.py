@@ -5,9 +5,9 @@
 # =============================================================================
 from uuid import uuid4
 from .base import (
-    BaseBroadcastMessage,
-    BaseRequestMessage,
-    BaseResponseMessage,
+    BaseBroadcast,
+    BaseRequest,
+    BaseResponse,
 )
 from .constants import (
     MESSAGE_DEFAULT_CHUNK_DATA,
@@ -33,7 +33,7 @@ from .constants import (
 
 
 ###############################################################################
-class FileListRequestMessage(BaseRequestMessage):
+class FileListRequest(BaseRequest):
     _type = MESSAGE_TYPE_FILE_LIST
 
     def __init__(
@@ -57,7 +57,7 @@ class FileListRequestMessage(BaseRequestMessage):
 
     @staticmethod
     def from_packet(packet):
-        return FileListRequestMessage(
+        return FileListRequest(
             id=packet.get_header().get_id(),
             username=packet.get_header().get_username(),
             session=packet.get_header().get_session(),
@@ -67,7 +67,7 @@ class FileListRequestMessage(BaseRequestMessage):
 
 
 ###############################################################################
-class FileListResponseMessage(BaseResponseMessage):
+class FileListResponse(BaseResponse):
     _type = MESSAGE_TYPE_FILE_LIST
 
     def __init__(
@@ -97,7 +97,7 @@ class FileListResponseMessage(BaseResponseMessage):
 
     @staticmethod
     def from_packet(packet):
-        return FileListResponseMessage(
+        return FileListResponse(
             id=packet.get_header().get_id(),
             username=packet.get_header().get_username(),
             session=packet.get_header().get_session(),
@@ -107,7 +107,7 @@ class FileListResponseMessage(BaseResponseMessage):
 
 
 ###############################################################################
-class RetrieveFileRequestMessage(BaseRequestMessage):
+class RetrieveFileRequest(BaseRequest):
     _type = MESSAGE_TYPE_RETRIEVE_FILE
 
     def __init__(
@@ -135,7 +135,7 @@ class RetrieveFileRequestMessage(BaseRequestMessage):
 
     @staticmethod
     def from_packet(packet):
-        return RetrieveFileRequestMessage(
+        return RetrieveFileRequest(
             id=packet.get_header().get_id(),
             username=packet.get_header().get_username(),
             session=packet.get_header().get_session(),
@@ -145,7 +145,7 @@ class RetrieveFileRequestMessage(BaseRequestMessage):
 
 
 ###############################################################################
-class RetrieveFileResponseMessage(BaseResponseMessage):
+class RetrieveFileResponse(BaseResponse):
     _type = MESSAGE_TYPE_RETRIEVE_FILE
 
     def __init__(
@@ -214,7 +214,7 @@ class RetrieveFileResponseMessage(BaseResponseMessage):
 
     @staticmethod
     def from_packet(packet):
-        return RetrieveFileResponseMessage(
+        return RetrieveFileResponse(
             id=packet.get_header().get_id(),
             username=packet.get_header().get_username(),
             session=packet.get_header().get_session(),
@@ -232,7 +232,7 @@ class RetrieveFileResponseMessage(BaseResponseMessage):
 
 
 ###############################################################################
-class UpdateFileStartRequestMessage(BaseRequestMessage):
+class UpdateFileStartRequest(BaseRequest):
     _type = MESSAGE_TYPE_UPDATE_FILE_START
 
     def __init__(
@@ -271,7 +271,7 @@ class UpdateFileStartRequestMessage(BaseRequestMessage):
 
     @staticmethod
     def from_packet(packet):
-        return UpdateFileStartRequestMessage(
+        return UpdateFileStartRequest(
             id=packet.get_header().get_id(),
             username=packet.get_header().get_username(),
             session=packet.get_header().get_session(),
@@ -283,7 +283,7 @@ class UpdateFileStartRequestMessage(BaseRequestMessage):
 
 
 ###############################################################################
-class UpdateFileStartResponseMessage(BaseResponseMessage):
+class UpdateFileStartResponse(BaseResponse):
     _type = MESSAGE_TYPE_UPDATE_FILE_START
 
     def __init__(
@@ -323,7 +323,7 @@ class UpdateFileStartResponseMessage(BaseResponseMessage):
 
     @staticmethod
     def from_packet(packet):
-        return UpdateFileStartResponseMessage(
+        return UpdateFileStartResponse(
             id=packet.get_header().get_id(),
             username=packet.get_header().get_username(),
             session=packet.get_header().get_session(),
@@ -335,7 +335,7 @@ class UpdateFileStartResponseMessage(BaseResponseMessage):
 
 
 ###############################################################################
-class UpdateFileDataRequestMessage(BaseRequestMessage):
+class UpdateFileDataRequest(BaseRequest):
     _type = MESSAGE_TYPE_UPDATE_FILE_DATA
 
     def __init__(
@@ -404,7 +404,7 @@ class UpdateFileDataRequestMessage(BaseRequestMessage):
 
     @staticmethod
     def from_packet(packet):
-        return UpdateFileDataRequestMessage(
+        return UpdateFileDataRequest(
             id=packet.get_header().get_id(),
             username=packet.get_header().get_username(),
             session=packet.get_header().get_session(),
@@ -422,7 +422,7 @@ class UpdateFileDataRequestMessage(BaseRequestMessage):
 
 
 ###############################################################################
-class UpdateFileDataResponseMessage(BaseResponseMessage):
+class UpdateFileDataResponse(BaseResponse):
     _type = MESSAGE_TYPE_UPDATE_FILE_DATA
 
     def __init__(
@@ -473,7 +473,7 @@ class UpdateFileDataResponseMessage(BaseResponseMessage):
 
     @staticmethod
     def from_packet(packet):
-        return UpdateFileDataResponseMessage(
+        return UpdateFileDataResponse(
             id=packet.get_header().get_id(),
             username=packet.get_header().get_username(),
             session=packet.get_header().get_session(),
@@ -487,7 +487,7 @@ class UpdateFileDataResponseMessage(BaseResponseMessage):
 
 
 ###############################################################################
-class FileChangeBroadcastMessage(BaseBroadcastMessage):
+class FileChangeBroadcast(BaseBroadcast):
     _type = MESSAGE_TYPE_FILE_CHANGED
 
     def __init__(
@@ -536,7 +536,7 @@ class FileChangeBroadcastMessage(BaseBroadcastMessage):
 
     @staticmethod
     def from_packet(packet):
-        return FileChangeBroadcastMessage(
+        return FileChangeBroadcast(
             id=packet.get_header().get_id(),
             username=packet.get_header().get_username(),
             session=packet.get_header().get_session(),

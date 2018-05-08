@@ -5,8 +5,8 @@
 # =============================================================================
 from uuid import uuid4
 from .base import (
-    BaseBroadcastMessage,
-    BaseResponseMessage,
+    BaseBroadcast,
+    BaseResponse,
 )
 from .constants import (
     MESSAGE_DEFAULT_ERROR_TEXT,
@@ -16,7 +16,7 @@ from .constants import (
 )
 
 
-class ErrorResponseMessage(BaseResponseMessage):
+class ErrorResponse(BaseResponse):
     _type = MESSAGE_TYPE_ERROR
 
     def __init__(
@@ -48,7 +48,7 @@ class ErrorResponseMessage(BaseResponseMessage):
 
     @staticmethod
     def from_packet(packet):
-        return ErrorResponseMessage(
+        return ErrorResponse(
             id=packet.get_header().get_id(),
             username=packet.get_header().get_username(),
             session=packet.get_header().get_session(),
@@ -57,7 +57,7 @@ class ErrorResponseMessage(BaseResponseMessage):
         )
 
 
-class ErrorBroadcastMessage(BaseBroadcastMessage):
+class ErrorBroadcast(BaseBroadcast):
     _type = MESSAGE_TYPE_ERROR
 
     def __init__(
@@ -89,7 +89,7 @@ class ErrorBroadcastMessage(BaseBroadcastMessage):
 
     @staticmethod
     def from_packet(packet):
-        return ErrorBroadcastMessage(
+        return ErrorBroadcast(
             id=packet.get_header().get_id(),
             username=packet.get_header().get_username(),
             session=packet.get_header().get_session(),

@@ -107,7 +107,7 @@ class BaseMessage(object):
         raise NotImplementedError()
 
 
-class BaseRequestMessage(BaseMessage):
+class BaseRequest(BaseMessage):
     """Represents the base request message that all requests extend."""
 
     def __init__(self, id, username, session, parent=None):
@@ -148,7 +148,7 @@ class BaseRequestMessage(BaseMessage):
         return packet
 
 
-class BaseResponseMessage(BaseMessage):
+class BaseResponse(BaseMessage):
     """Represents the base response message that all responses extend."""
 
     def __init__(self, id, username, session, parent=None):
@@ -189,7 +189,7 @@ class BaseResponseMessage(BaseMessage):
         return packet
 
 
-class BaseBroadcastMessage(BaseMessage):
+class BaseBroadcast(BaseMessage):
     """Represents the base broadcast message that all broadcasts extend."""
 
     def __init__(self, id, username, session, parent=None):

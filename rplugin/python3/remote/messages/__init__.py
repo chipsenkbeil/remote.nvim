@@ -29,14 +29,14 @@ def _init_registry():
         print('Loaded {}'.format(mod))
 
     from .base import (
-        BaseBroadcastMessage,
-        BaseRequestMessage,
-        BaseResponseMessage,
+        BaseBroadcast,
+        BaseRequest,
+        BaseResponse,
     )
     classes_to_register = []
-    classes_to_register.extend(find_subclasses(BaseBroadcastMessage))
-    classes_to_register.extend(find_subclasses(BaseRequestMessage))
-    classes_to_register.extend(find_subclasses(BaseResponseMessage))
+    classes_to_register.extend(find_subclasses(BaseBroadcast))
+    classes_to_register.extend(find_subclasses(BaseRequest))
+    classes_to_register.extend(find_subclasses(BaseResponse))
     for cl in classes_to_register:
         _registry.register(cl)
 

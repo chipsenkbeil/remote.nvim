@@ -5,23 +5,23 @@
 # =============================================================================
 from .base import BaseHandler
 from ..messages.command import (
-    CommandRequestMessage,
-    CommandResponseMessage,
+    CommandRequest,
+    CommandResponse,
 )
 from ..messages.error import (
-    ErrorBroadcastMessage,
-    ErrorResponseMessage,
+    ErrorBroadcast,
+    ErrorResponse,
 )
 from ..messages.file import (
-    FileChangeBroadcastMessage,
-    FileListRequestMessage,
-    FileListResponseMessage,
-    RetrieveFileRequestMessage,
-    RetrieveFileResponseMessage,
-    UpdateFileDataRequestMessage,
-    UpdateFileDataResponseMessage,
-    UpdateFileStartRequestMessage,
-    UpdateFileStartResponseMessage,
+    FileChangeBroadcast,
+    FileListRequest,
+    FileListResponse,
+    RetrieveFileRequest,
+    RetrieveFileResponse,
+    UpdateFileDataRequest,
+    UpdateFileDataResponse,
+    UpdateFileStartRequest,
+    UpdateFileStartResponse,
 )
 
 
@@ -39,19 +39,19 @@ class ClientHandler(BaseHandler):
     def initialize(self):
         """Initializes the registry so it can respond to messages."""
         r = self.registry
-        r.register(CommandRequestMessage, self._command_request)
-        r.register(CommandResponseMessage, self._command_response)
-        r.register(ErrorBroadcastMessage, self._error_broadcast)
-        r.register(ErrorResponseMessage, self._error_response)
-        r.register(FileChangeBroadcastMessage, self._file_change_broadcast)
-        r.register(FileListRequestMessage, self._file_list_request)
-        r.register(FileListResponseMessage, self._file_list_response)
-        r.register(RetrieveFileRequestMessage, self._retrieve_file_request)
-        r.register(RetrieveFileResponseMessage, self._retrieve_file_response)
-        r.register(UpdateFileDataRequestMessage, self._update_file_data_request)
-        r.register(UpdateFileDataResponseMessage, self._update_file_data_response)
-        r.register(UpdateFileStartRequestMessage, self._update_file_start_request)
-        r.register(UpdateFileStartResponseMessage, self._update_file_start_response)
+        r.register(CommandRequest, self._command_request)
+        r.register(CommandResponse, self._command_response)
+        r.register(ErrorBroadcast, self._error_broadcast)
+        r.register(ErrorResponse, self._error_response)
+        r.register(FileChangeBroadcast, self._file_change_broadcast)
+        r.register(FileListRequest, self._file_list_request)
+        r.register(FileListResponse, self._file_list_response)
+        r.register(RetrieveFileRequest, self._retrieve_file_request)
+        r.register(RetrieveFileResponse, self._retrieve_file_response)
+        r.register(UpdateFileDataRequest, self._update_file_data_request)
+        r.register(UpdateFileDataResponse, self._update_file_data_response)
+        r.register(UpdateFileStartRequest, self._update_file_start_request)
+        r.register(UpdateFileStartResponse, self._update_file_start_response)
 
     def _command_request(self, msg):
         return None

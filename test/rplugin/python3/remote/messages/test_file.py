@@ -27,15 +27,15 @@ from remote.messages.constants import (
     MESSAGE_TYPE_UPDATE_FILE_START,
 )
 from remote.messages.file import (
-    FileChangeBroadcastMessage,
-    FileListRequestMessage,
-    FileListResponseMessage,
-    RetrieveFileRequestMessage,
-    RetrieveFileResponseMessage,
-    UpdateFileDataRequestMessage,
-    UpdateFileDataResponseMessage,
-    UpdateFileStartRequestMessage,
-    UpdateFileStartResponseMessage,
+    FileChangeBroadcast,
+    FileListRequest,
+    FileListResponse,
+    RetrieveFileRequest,
+    RetrieveFileResponse,
+    UpdateFileDataRequest,
+    UpdateFileDataResponse,
+    UpdateFileStartRequest,
+    UpdateFileStartResponse,
 )
 
 TEST_ID = 12345
@@ -44,8 +44,8 @@ TEST_SESSION = 'mysession'
 
 
 ###############################################################################
-class TestFileListRequestMessage(object):
-    _class = FileListRequestMessage
+class TestFileListRequest(object):
+    _class = FileListRequest
     _path = 'path/to/dir'
 
     def test_constructor(self):
@@ -94,8 +94,8 @@ class TestFileListRequestMessage(object):
 
 
 ###############################################################################
-class TestFileListResponseMessage(object):
-    _class = FileListResponseMessage
+class TestFileListResponse(object):
+    _class = FileListResponse
     _file_list = [
         ('path/to/file', 0),
         ('path/to/dir', -1),
@@ -148,8 +148,8 @@ class TestFileListResponseMessage(object):
 
 
 ###############################################################################
-class TestRetrieveFileRequestMessage(object):
-    _class = RetrieveFileRequestMessage
+class TestRetrieveFileRequest(object):
+    _class = RetrieveFileRequest
     _file_path = 'path/to/file'
 
     def test_constructor(self):
@@ -198,8 +198,8 @@ class TestRetrieveFileRequestMessage(object):
 
 
 ###############################################################################
-class TestRetrieveFileResponseMessage(object):
-    _class = RetrieveFileResponseMessage
+class TestRetrieveFileResponse(object):
+    _class = RetrieveFileResponse
     _file_length = 999
     _file_version = 7
     _total_chunks = 99
@@ -285,8 +285,8 @@ class TestRetrieveFileResponseMessage(object):
 
 
 ###############################################################################
-class TestUpdateFileDataRequestMessage(object):
-    _class = UpdateFileDataRequestMessage
+class TestUpdateFileDataRequest(object):
+    _class = UpdateFileDataRequest
     _file_length = 999
     _file_version = 7
     _total_chunks = 99
@@ -372,8 +372,8 @@ class TestUpdateFileDataRequestMessage(object):
 
 
 ###############################################################################
-class TestUpdateFileStartRequestMessage(object):
-    _class = UpdateFileStartRequestMessage
+class TestUpdateFileStartRequest(object):
+    _class = UpdateFileStartRequest
     _file_path = 'path/to/file'
     _file_version = 7
 
@@ -432,8 +432,8 @@ class TestUpdateFileStartRequestMessage(object):
 
 
 ###############################################################################
-class TestUpdateFileStartResponseMessage(object):
-    _class = UpdateFileStartResponseMessage
+class TestUpdateFileStartResponse(object):
+    _class = UpdateFileStartResponse
     _file_path = 'path/to/file'
     _file_version = 7
 
@@ -492,8 +492,8 @@ class TestUpdateFileStartResponseMessage(object):
 
 
 ###############################################################################
-class TestUpdateFileDataResponseMessage(object):
-    _class = UpdateFileDataResponseMessage
+class TestUpdateFileDataResponse(object):
+    _class = UpdateFileDataResponse
     _file_version = 7
     _total_chunks = 99
     _chunks_received = 50
@@ -561,8 +561,8 @@ class TestUpdateFileDataResponseMessage(object):
 
 
 ###############################################################################
-class TestFileChangeBroadcastMessage(object):
-    _class = FileChangeBroadcastMessage
+class TestFileChangeBroadcast(object):
+    _class = FileChangeBroadcast
     _file_path = 'path/to/file'
     _file_version = 7
     _file_length = 999

@@ -8,10 +8,6 @@ from .client import RemoteClient
 from .server import RemoteServer
 from .utils import is_int, to_int
 from . import logger
-from .messages.file import (
-    UpdateFileDataRequestMessage,
-    UpdateFileStartRequestMessage,
-)
 
 
 @neovim.plugin
