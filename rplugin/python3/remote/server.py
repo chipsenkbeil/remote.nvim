@@ -8,6 +8,7 @@ from . import logger
 from .packet import Packet
 from .security import new_hmac_from_key
 from .messages import packet_to_message
+from .actions.server import ServerHandler
 
 
 class RemoteServer(logger.LoggingMixin):
@@ -75,6 +76,10 @@ class RemoteServerProtocol(DatagramProtocol, logger.LoggingMixin):
     def __init__(self, nvim, hmac):
         self.nvim = nvim
         self.hmac = hmac
+        self.handler = ServerHandler(
+            nvim=nvim,
+            send=lambda data, addr: self.transport.sendto(data, addr),
+            broadcast=lambda data: 
         self.transport = None
         self.is_debug_enabled = True
 
@@ -96,6 +101,9 @@ class RemoteServerProtocol(DatagramProtocol, logger.LoggingMixin):
                 packet = Packet.read(data)
                 is_valid = packet.is_signature_valid(self.hmac)
                 msg = packet_to_message(packet)
+
+                if (is_valid and msg is not None):
+
                 self.transport.sendto(packet.to_bytes(), addr)
                 self.info('New data: %s\nValid: %s' % (msg, is_valid))
                 self.nvim.async_call(lambda nvim, msg, addr, valid: nvim.out_write(
