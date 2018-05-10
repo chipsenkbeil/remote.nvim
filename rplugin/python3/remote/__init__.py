@@ -5,6 +5,7 @@
 # =============================================================================
 import neovim
 from .client import RemoteClient
+from .messages import file
 from .server import RemoteServer
 from .utils import is_int, to_int
 from . import logger
@@ -135,12 +136,6 @@ class RemoteHandlers(logger.LoggingMixin):
         :param filename: The full path to the file relative to neovim
         """
         if (self.client is not None):
-            m = UpdateFileStartRequestMessage(
-                file_path=filename,
-                file_version=1.0,
-            )
-            # TODO: Generate signature when creating packet
-            p = m.to_packet().gen_signature(self.client.hmac)
-            self.client.send(p.to_bytes())
+            self.client.start_file_update(filename)
         if (self.server is not None):
-            self.server.send()
+            self.server.send_file_change(filename)

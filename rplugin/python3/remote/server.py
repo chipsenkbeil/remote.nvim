@@ -7,7 +7,7 @@ from asyncio import DatagramProtocol
 from . import logger
 from .packet import Packet
 from .security import new_hmac_from_key
-from .messages import packet_to_message
+from .messages import file, packet_to_message
 from .actions.server import ServerHandler
 
 
@@ -37,6 +37,10 @@ class RemoteServer(logger.LoggingMixin):
             data = data.encode()
 
         self.transport.sendto(data, addr)
+
+    def broadcast_file_change(self, filename):
+        # TODO: Implement
+        return None
 
     def run(self, cb):
         """Starts the remote server, adding it to the event loop and running
@@ -79,7 +83,8 @@ class RemoteServerProtocol(DatagramProtocol, logger.LoggingMixin):
         self.handler = ServerHandler(
             nvim=nvim,
             send=lambda data, addr: self.transport.sendto(data, addr),
-            broadcast=lambda data: 
+            broadcast=None,
+        )
         self.transport = None
         self.is_debug_enabled = True
 
@@ -103,13 +108,10 @@ class RemoteServerProtocol(DatagramProtocol, logger.LoggingMixin):
                 msg = packet_to_message(packet)
 
                 if (is_valid and msg is not None):
-
-                self.transport.sendto(packet.to_bytes(), addr)
-                self.info('New data: %s\nValid: %s' % (msg, is_valid))
-                self.nvim.async_call(lambda nvim, msg, addr, valid: nvim.out_write(
-                    'Received %r from %s\nValid: %s\n' % (msg, addr, valid)),
-                                     self.nvim, msg, addr, is_valid)
+                    self.handler.process(msg)
+                elif (not is_valid):
+                    self.error('Dropping invalid packet: %s\n'.format(packet))
+                else:
+                    self.error('Dropping unknown packet: %s\n'.format(packet))
             except Exception as ex:
-                self.nvim.async_call(lambda nvim, ex: nvim.err_write(
-                                     'Exception %s\n' % ex),
-                                     self.nvim, ex)
+                self.error('Unexpected failure: %s\n'.format(ex))

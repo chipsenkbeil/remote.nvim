@@ -5,10 +5,11 @@
 # =============================================================================
 import asyncio
 from asyncio import DatagramProtocol
+from uuid import uuid4
 from . import logger
+from .messages import file, packet_to_message
 from .packet import Packet
 from .security import new_hmac_from_key
-from .messages import packet_to_message
 
 
 class RemoteClient(logger.LoggingMixin):
@@ -20,6 +21,8 @@ class RemoteClient(logger.LoggingMixin):
         self.info['addr'] = addr
         self.info['port'] = port
         self.info['key'] = key
+        self.info['session'] = uuid4()
+        self.info['username'] = 'senkwich'
 
         self.hmac = new_hmac_from_key(key)
         self.loop = None
@@ -38,6 +41,25 @@ class RemoteClient(logger.LoggingMixin):
 
         self.transport.sendto(data)
         self.nvim.out_write('Sent "{}"\n'.format(data))
+
+    def start_file_update(self, filename):
+        """Starts a new request to the server to update a file.
+
+        :param filename: The full, local path of the file to update
+        """
+        # TODO: Lookup file version, file length from filename
+        r = file.UpdateFileStartRequest(
+            username=self.info['username'],
+            session=self.info['session'],
+            file_path=filename,
+            file_version=1.0,
+            file_length=0,
+        )
+        p = r.to_packet().gen_signature(self.client.hmac)
+        self.send(p.to_bytes())
+        self.nvim.async_call(lambda nvim, filename, addr, port: nvim.out_write(
+            'Updating %s on %s:%s' % (filename, addr, port)),
+            self.nvim, filename, self.info['addr'], self.info['port'])
 
     def run(self, cb):
         """Starts the remote client, adding it to the event loop and running
@@ -99,13 +121,12 @@ class RemoteClientProtocol(DatagramProtocol, logger.LoggingMixin):
                 packet = Packet.read(data)
                 is_valid = packet.is_signature_valid(self.hmac)
                 msg = packet_to_message(packet)
-                self.info('New data: %s\nValid: %s' % (msg, is_valid))
-                #self.transport.sendto(packet.to_bytes(), addr)
-                self.info('New data: %s' % msg)
-                self.nvim.async_call(lambda nvim, msg, addr, valid: nvim.out_write(
-                    'Received %r from %s\nValid: %s\n' % (msg, addr, valid)),
-                                     self.nvim, msg, addr, is_valid)
+
+                if (is_valid and msg is not None):
+                    self.handler.process(msg)
+                elif (not is_valid):
+                    self.error('Dropping invalid packet: %s\n'.format(packet))
+                else:
+                    self.error('Dropping unknown packet: %s\n'.format(packet))
             except Exception as ex:
-                self.nvim.async_call(lambda nvim, ex: nvim.err_write(
-                                     'Exception %s\n' % ex),
-                                     self.nvim, ex)
+                self.error('Unexpected failure: %s\n'.format(ex))
