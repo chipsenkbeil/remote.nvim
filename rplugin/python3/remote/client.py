@@ -21,7 +21,7 @@ class RemoteClient(logger.LoggingMixin):
         self.info['addr'] = addr
         self.info['port'] = port
         self.info['key'] = key
-        self.info['session'] = uuid4()
+        self.info['session'] = str(uuid4())
         self.info['username'] = 'senkwich'
 
         self.hmac = new_hmac_from_key(key)
@@ -53,9 +53,8 @@ class RemoteClient(logger.LoggingMixin):
             session=self.info['session'],
             file_path=filename,
             file_version=1.0,
-            file_length=0,
         )
-        p = r.to_packet().gen_signature(self.client.hmac)
+        p = r.to_packet().gen_signature(self.hmac)
         self.send(p.to_bytes())
         self.nvim.async_call(lambda nvim, filename, addr, port: nvim.out_write(
             'Updating %s on %s:%s' % (filename, addr, port)),

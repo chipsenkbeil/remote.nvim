@@ -114,3 +114,6 @@ vim-themis
 doc/tags
 *.py[cod]
 .cache
+
+# From pyre
+.pyre/
