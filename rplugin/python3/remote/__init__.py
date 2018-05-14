@@ -5,7 +5,6 @@
 # =============================================================================
 import neovim
 from .client import RemoteClient
-from .messages import file
 from .server import RemoteServer
 from .utils import is_int, to_int
 from . import logger

@@ -8,27 +8,60 @@
 # GENERAL CONSTANTS
 ###############################################################################
 
-# Represents overall message api version
-MESSAGE_API_VERSION = '0.1'
+# Represents overall packet api version
+PACKET_API_VERSION = '0.1'
 
 ###############################################################################
-# MESSAGE TYPE CONSTANTS
+# PACKET TYPE HELPERS
 ###############################################################################
 
-# Represents the types of messages request/response/broadcast
-MESSAGE_TYPE_COMMAND = 'COMMAND'
-MESSAGE_TYPE_ERROR = 'ERROR'
-MESSAGE_TYPE_FILE_CHANGED = 'FILE_CHANGED'
-MESSAGE_TYPE_FILE_LIST = 'FILE_LIST'
-MESSAGE_TYPE_RETRIEVE_FILE = 'RETRIEVE_FILE'
-MESSAGE_TYPE_UPDATE_FILE_START = 'UPDATE_FILE_START'
-MESSAGE_TYPE_UPDATE_FILE_DATA = 'UPDATE_FILE_DATA'
+_BROADCAST_SUFFIX = '_BROADCAST'
+_REQUEST_SUFFIX = '_REQUEST'
+_RESPONSE_SUFFIX = '_RESPONSE'
 
-# Represents the subtype this message represents
-MESSAGE_SUBTYPE = 'SUBTYPE'
-MESSAGE_SUBTYPE_REQUEST = 'REQUEST'
-MESSAGE_SUBTYPE_RESPONSE = 'RESPONSE'
-MESSAGE_SUBTYPE_BROADCAST = 'BROADCAST'
+
+def _broadcast(text): return text + _BROADCAST_SUFFIX
+
+
+def _request(text): return text + _REQUEST_SUFFIX
+
+
+def _response(text): return text + _RESPONSE_SUFFIX
+
+
+# True if packet type represents a packet with no response expected
+def is_broadcast(packet_type): return packet_type.endswith(_BROADCAST_SUFFIX)
+
+
+# True if packet type represents a packet expecting a response
+def is_request(packet_type): return packet_type.endswith(_REQUEST_SUFFIX)
+
+
+# True if packet type represents a response to a packet expecting a response
+def is_response(packet_type): return packet_type.endswith(_RESPONSE_SUFFIX)
+
+
+###############################################################################
+# PACKET TYPE CONSTANTS
+###############################################################################
+
+PACKET_TYPE_BROADCAST_ERROR = _broadcast('ERROR')
+PACKET_TYPE_BROADCAST_FILE_CHANGED = _broadcast('FILE_CHANGED')
+PACKET_TYPE_BROADCAST_HEARTBEAT = _broadcast('HEARTBEAT')
+
+PACKET_TYPE_REQUEST_COMMAND = _request('COMMAND')
+PACKET_TYPE_REQUEST_FILE_LIST = _request('FILE_LIST')
+
+PACKET_TYPE_RESPONSE_COMMAND = _response('COMMAND')
+PACKET_TYPE_RESPONSE_ERROR = _response('ERROR')
+PACKET_TYPE_RESPONSE_FILE_LIST = _response('FILE_LIST')
+
+PACKET_TYPE_RETRIEVE_FILE_REQUEST = 'RETRIEVE_FILE'
+PACKET_TYPE_RETRIEVE_FILE = 'RETRIEVE_FILE'
+PACKET_TYPE_UPDATE_FILE_START = 'UPDATE_FILE_START'
+PACKET_TYPE_UPDATE_FILE_START = 'UPDATE_FILE_START'
+PACKET_TYPE_UPDATE_FILE_DATA = 'UPDATE_FILE_DATA'
+PACKET_TYPE_UPDATE_FILE_DATA = 'UPDATE_FILE_DATA'
 
 ###############################################################################
 # BASE CONSTANTS

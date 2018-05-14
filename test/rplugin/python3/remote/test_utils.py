@@ -5,7 +5,6 @@
 # =============================================================================
 import pytest
 from remote.utils import (
-    find_subclasses,
     is_int,
     to_int,
 )
@@ -38,47 +37,3 @@ def test_is_int_false():
     expected = False
     actual = is_int('abc')
     assert actual == expected
-
-
-def test_find_subclasses_not_a_class():
-    with pytest.raises(AssertionError):
-        find_subclasses(3)
-
-
-def test_find_subclasses_no_subclasses():
-    class A():
-        pass
-
-    assert len(find_subclasses(A)) == 0
-
-
-def test_find_subclasses_top_level_subclasses_only():
-    class A():
-        pass
-
-    class B(A):
-        pass
-
-    class C(B):
-        pass
-
-    subclasses = find_subclasses(A, include_indirect=False)
-    assert len(subclasses) == 1
-    assert B in subclasses
-    assert C not in subclasses
-
-
-def test_find_subclasses_multi_level_subclasses():
-    class A():
-        pass
-
-    class B(A):
-        pass
-
-    class C(B):
-        pass
-
-    subclasses = find_subclasses(A, include_indirect=True)
-    assert len(subclasses) == 2
-    assert B in subclasses
-    assert C in subclasses

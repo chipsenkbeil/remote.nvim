@@ -7,7 +7,6 @@ import asyncio
 from asyncio import DatagramProtocol
 from uuid import uuid4
 from . import logger
-from .messages import file, packet_to_message
 from .packet import Packet
 from .security import new_hmac_from_key
 
@@ -119,10 +118,9 @@ class RemoteClientProtocol(DatagramProtocol, logger.LoggingMixin):
             try:
                 packet = Packet.read(data)
                 is_valid = packet.is_signature_valid(self.hmac)
-                msg = packet_to_message(packet)
 
-                if (is_valid and msg is not None):
-                    self.handler.process(msg)
+                if (is_valid):
+                    self.handler.process(packet)
                 elif (not is_valid):
                     self.error('Dropping invalid packet: %s\n'.format(packet))
                 else:
