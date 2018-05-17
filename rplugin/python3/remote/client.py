@@ -9,6 +9,7 @@ from uuid import uuid4
 from . import logger
 from .packet import Packet
 from .security import new_hmac_from_key
+from .handlers.client import ClientHandler
 
 
 class RemoteClient(logger.LoggingMixin):
@@ -98,6 +99,10 @@ class RemoteClientProtocol(DatagramProtocol, logger.LoggingMixin):
     def __init__(self, nvim, hmac):
         self.nvim = nvim
         self.hmac = hmac
+        self.handler = ClientHandler(
+            nvim=nvim,
+            send=lambda data: self.transport.send(data),
+        )
         self.is_debug_enabled = True
         self.transport = None
 

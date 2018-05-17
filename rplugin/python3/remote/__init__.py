@@ -67,7 +67,7 @@ class RemoteHandlers(logger.LoggingMixin):
 
         self.nvim.out_write('Attempting to connect to {}:{}...\n'
                             .format(addr, port))
-        self.client = RemoteClient(self.nvim, addr, port, key)
+        self.client = RemoteClient(self.nvim, self.nvim.loop, addr, port, key)
         self.client.run(lambda err: self.nvim.out_write(
             'Connected to {}:{}!\n'.format(addr, port)))
 
@@ -97,7 +97,7 @@ class RemoteHandlers(logger.LoggingMixin):
 
         self.nvim.out_write('Attempting to listen on {}:{}...\n'
                             .format(addr, port))
-        self.server = RemoteServer(self.nvim, addr, port, key)
+        self.server = RemoteServer(self.nvim, self.nvim.loop, addr, port, key)
         self.server.run(lambda err: self.nvim.out_write(
             'Listening on {}:{}!\n'.format(addr, port)))
 

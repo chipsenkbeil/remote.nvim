@@ -7,13 +7,13 @@ from asyncio import DatagramProtocol
 from . import logger
 from .packet import Packet
 from .security import new_hmac_from_key
-from .actions.server import ServerHandler
+from .handlers.server import ServerHandler
 
 
 class RemoteServer(logger.LoggingMixin):
-    def __init__(self, nvim, addr, port, key):
+    def __init__(self, nvim, loop, addr, port, key):
         self.nvim = nvim
-        self.loop = nvim.loop
+        self.loop = loop
         self.is_debug_enabled = True
 
         self.info = {}
