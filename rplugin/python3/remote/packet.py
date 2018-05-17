@@ -242,8 +242,7 @@ class Header(object):
         return obj
 
     def set_random_id(self):
-        self.set_id(str(uuid4()))
-        return self
+        return self.set_id(str(uuid4()))
 
     def set_id(self, id):
         self._id = id
@@ -267,8 +266,7 @@ class Header(object):
         return self._session
 
     def set_date_now(self):
-        self.set_date(datetime.now())
-        return self
+        return self.set_date(datetime.now())
 
     def set_date(self, date):
         self._date = date
@@ -283,6 +281,9 @@ class Header(object):
 
     def get_type(self):
         return self._type
+
+    def set_version_current(self):
+        return self.set_verison(PACKET_VERSION)
 
     def set_version(self, version):
         self._version = version

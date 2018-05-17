@@ -15,48 +15,48 @@ PACKET_API_VERSION = '0.1'
 # PACKET TYPE HELPERS
 ###############################################################################
 
-_BROADCAST_SUFFIX = '_BROADCAST'
-_REQUEST_SUFFIX = '_REQUEST'
-_RESPONSE_SUFFIX = '_RESPONSE'
+_TELL_SUFFIX = '_TELL'
+_ASK_SUFFIX = '_ASK'
+_ANSWER_SUFFIX = '_ANSWER'
 
 
-def _broadcast(text): return text + _BROADCAST_SUFFIX
+def _tell(text): return text + _TELL_SUFFIX
 
 
-def _request(text): return text + _REQUEST_SUFFIX
+def _ask(text): return text + _ASK_SUFFIX
 
 
-def _response(text): return text + _RESPONSE_SUFFIX
+def _answer(text): return text + _ANSWER_SUFFIX
 
 
-# True if packet type represents a packet with no response expected
-def is_broadcast(packet_type): return packet_type.endswith(_BROADCAST_SUFFIX)
+# True if packet type represents a packet with no answer expected
+def is_tell(packet_type): return packet_type.endswith(_TELL_SUFFIX)
 
 
-# True if packet type represents a packet expecting a response
-def is_request(packet_type): return packet_type.endswith(_REQUEST_SUFFIX)
+# True if packet type represents a packet expecting an answer
+def is_ask(packet_type): return packet_type.endswith(_ASK_SUFFIX)
 
 
-# True if packet type represents a response to a packet expecting a response
-def is_response(packet_type): return packet_type.endswith(_RESPONSE_SUFFIX)
+# True if packet type represents an answer to an ask packet
+def is_answer(packet_type): return packet_type.endswith(_ANSWER_SUFFIX)
 
 
 ###############################################################################
 # PACKET TYPE CONSTANTS
 ###############################################################################
 
-PACKET_TYPE_BROADCAST_ERROR = _broadcast('ERROR')
-PACKET_TYPE_BROADCAST_FILE_CHANGED = _broadcast('FILE_CHANGED')
-PACKET_TYPE_BROADCAST_HEARTBEAT = _broadcast('HEARTBEAT')
+PACKET_TYPE_TELL_ERROR = _tell('ERROR')
+PACKET_TYPE_TELL_FILE_CHANGED = _tell('FILE_CHANGED')
+PACKET_TYPE_TELL_HEARTBEAT = _tell('HEARTBEAT')
 
-PACKET_TYPE_REQUEST_COMMAND = _request('COMMAND')
-PACKET_TYPE_REQUEST_FILE_LIST = _request('FILE_LIST')
+PACKET_TYPE_ASK_COMMAND = _ask('COMMAND')
+PACKET_TYPE_ASK_FILE_LIST = _ask('FILE_LIST')
 
-PACKET_TYPE_RESPONSE_COMMAND = _response('COMMAND')
-PACKET_TYPE_RESPONSE_ERROR = _response('ERROR')
-PACKET_TYPE_RESPONSE_FILE_LIST = _response('FILE_LIST')
+PACKET_TYPE_ANSWER_COMMAND = _answer('COMMAND')
+PACKET_TYPE_ANSWER_ERROR = _answer('ERROR')
+PACKET_TYPE_ANSWER_FILE_LIST = _answer('FILE_LIST')
 
-PACKET_TYPE_RETRIEVE_FILE_REQUEST = 'RETRIEVE_FILE'
+PACKET_TYPE_RETRIEVE_FILE_ASK = 'RETRIEVE_FILE'
 PACKET_TYPE_RETRIEVE_FILE = 'RETRIEVE_FILE'
 PACKET_TYPE_UPDATE_FILE_START = 'UPDATE_FILE_START'
 PACKET_TYPE_UPDATE_FILE_START = 'UPDATE_FILE_START'

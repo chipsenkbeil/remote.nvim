@@ -7,9 +7,14 @@ import asyncio
 from asyncio import DatagramProtocol
 from uuid import uuid4
 from . import logger
-from .packet import Packet
-from .security import new_hmac_from_key
 from .handlers.client import ClientHandler
+from .packet import (
+    Content,
+    Header,
+    Metadata,
+    Packet,
+)
+from .security import new_hmac_from_key
 
 
 class RemoteClient(logger.LoggingMixin):
@@ -42,7 +47,7 @@ class RemoteClient(logger.LoggingMixin):
         self.transport.sendto(data)
         self.nvim.out_write('Sent "{}"\n'.format(data))
 
-    def start_file_update(self, filename):
+    def send_start_file_update(self, filename):
         """Starts a new request to the server to update a file.
 
         :param filename: The full, local path of the file to update
@@ -54,7 +59,18 @@ class RemoteClient(logger.LoggingMixin):
             file_path=filename,
             file_version=1.0,
         )
-        p = r.to_packet().gen_signature(self.hmac)
+        p = (Packet()
+             .set_parent_header(Header.empty())
+             .set_header(Header()
+                         .set_random_id()
+                         .set_username(self.info['username'])
+                         .set_session(self.info['session'])
+                         .set_date_now()
+                         .set_type()
+                         .set_version_current())
+             .set_metadata(Metadata.empty())
+             .set_content(Content().set_data())
+             .gen_signature(self.hmac))
         self.send(p.to_bytes())
         self.nvim.async_call(lambda nvim, filename, addr, port: nvim.out_write(
             'Updating %s on %s:%s' % (filename, addr, port)),

@@ -135,6 +135,6 @@ class RemoteHandlers(logger.LoggingMixin):
         :param filename: The full path to the file relative to neovim
         """
         if (self.client is not None):
-            self.client.start_file_update(filename)
+            self.client.send_start_file_update(filename)
         if (self.server is not None):
-            self.server.send_file_change(filename)
+            self.server.broadcast_file_change(filename)
