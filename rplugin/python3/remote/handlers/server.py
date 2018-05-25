@@ -5,7 +5,7 @@
 # =============================================================================
 from .base import BaseHandler
 from ..constants import (
-    PACKET_TYPE_BROADCAST_HEARTBEAT,
+    PACKET_TYPE_TELL_HEARTBEAT,
 )
 
 
@@ -26,7 +26,7 @@ class ServerHandler(BaseHandler):
     def initialize(self):
         """Initializes the registry so it can respond to messages."""
         r = self.registry
-        r.register(PACKET_TYPE_BROADCAST_HEARTBEAT, self._heartbeat)
+        r.register(PACKET_TYPE_TELL_HEARTBEAT, self._heartbeat)
 
     def _heartbeat(self, packet):
         """Executed when receiving a heartbeat from a client."""
