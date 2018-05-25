@@ -5,9 +5,11 @@
 # =============================================================================
 import pytest
 import asyncio
+from unittest.mock import Mock
 from remote.timer import Timer
 
-TEST_INTERVAL = 0.01
+TEST_PAD_TIME = 0.5
+TEST_INTVL = 0.01
 TEST_ARGS = [1, 2, 3]
 TEST_KWARGS = {'arg1': 1, 'arg2': 2}
 
@@ -16,107 +18,105 @@ def TEST_FUNC(*args, **kwargs):
     return None
 
 
-@pytest.fixture(scope='module')
-def loop():
-    event_loop = asyncio.new_event_loop()
-    yield event_loop
-    event_loop.stop()
-    event_loop.close()
+@pytest.fixture()
+def timer(event_loop):
+    tmr = Timer(event_loop)
+    yield tmr
+    tmr.clear()
 
 
 class TestTimer(object):
-    def test_add_handler_timecheck(self, loop):
+    @pytest.mark.asyncio
+    async def test_add_handler_timecheck(self, timer):
+        expected = 3
+
+        f = Mock(return_value=None)
+        id = timer.add_handler(TEST_INTVL, f, TEST_ARGS, TEST_KWARGS)
+        await asyncio.sleep(TEST_INTVL * expected + TEST_PAD_TIME)
+        actual = f.call_count
+
+        print('ERROR: ' + str(timer.get_handler_exception(id)))
+        assert actual == expected
+
+    def test_add_handler_wrapperexception(self, timer):
         assert False
 
-    def test_add_handler_wrapperexception(self, loop):
-        assert False
-
-    def test_remove_handler_found(self, loop):
+    def test_remove_handler_found(self, timer):
         expected = True
 
-        tmr = Timer(loop)
-        id = tmr.add_handler(TEST_INTERVAL, TEST_FUNC, TEST_ARGS, TEST_KWARGS)
-        actual = tmr.remove_handler(id)
+        id = timer.add_handler(TEST_INTVL, TEST_FUNC, TEST_ARGS, TEST_KWARGS)
+        actual = timer.remove_handler(id)
 
         assert actual == expected
 
-    def test_remove_handler_missing(self, loop):
+    def test_remove_handler_missing(self, timer):
         expected = False
 
-        tmr = Timer(loop)
         id = '12345'
-        actual = tmr.remove_handler(id)
+        actual = timer.remove_handler(id)
 
         assert actual == expected
 
-    def test_get_handler_interval_found(self, loop):
-        expected = TEST_INTERVAL
+    def test_get_handler_interval_found(self, timer):
+        expected = TEST_INTVL
 
-        tmr = Timer(loop)
-        id = tmr.add_handler(TEST_INTERVAL, TEST_FUNC, TEST_ARGS, TEST_KWARGS)
-        actual = tmr.get_handler_interval(id)
+        id = timer.add_handler(TEST_INTVL, TEST_FUNC, TEST_ARGS, TEST_KWARGS)
+        actual = timer.get_handler_interval(id)
 
         assert actual == expected
 
-    def test_get_handler_interval_missing(self, loop):
+    def test_get_handler_interval_missing(self, timer):
         expected = None
 
-        tmr = Timer(loop)
         id = '12345'
-        actual = tmr.get_handler_interval(id)
+        actual = timer.get_handler_interval(id)
 
         assert actual == expected
 
-    def test_get_handler_function_found(self, loop):
+    def test_get_handler_function_found(self, timer):
         expected = TEST_FUNC
 
-        tmr = Timer(loop)
-        id = tmr.add_handler(TEST_INTERVAL, TEST_FUNC, TEST_ARGS, TEST_KWARGS)
-        actual = tmr.get_handler_function(id)
+        id = timer.add_handler(TEST_INTVL, TEST_FUNC, TEST_ARGS, TEST_KWARGS)
+        actual = timer.get_handler_function(id)
 
         assert actual == expected
 
-    def test_get_handler_function_missing(self, loop):
+    def test_get_handler_function_missing(self, timer):
         expected = None
 
-        tmr = Timer(loop)
         id = '12345'
-        actual = tmr.get_handler_function(id)
+        actual = timer.get_handler_function(id)
 
         assert actual == expected
 
-    def test_get_handler_args_found(self, loop):
+    def test_get_handler_args_found(self, timer):
         expected = TEST_ARGS
 
-        tmr = Timer(loop)
-        id = tmr.add_handler(TEST_INTERVAL, TEST_FUNC, TEST_ARGS, TEST_KWARGS)
-        actual = tmr.get_handler_args(id)
+        id = timer.add_handler(TEST_INTVL, TEST_FUNC, TEST_ARGS, TEST_KWARGS)
+        actual = timer.get_handler_args(id)
 
         assert actual == expected
 
-    def test_get_handler_args_missing(self, loop):
+    def test_get_handler_args_missing(self, timer):
         expected = None
 
-        tmr = Timer(loop)
         id = '12345'
-        actual = tmr.get_handler_args(id)
+        actual = timer.get_handler_args(id)
 
         assert actual == expected
 
-    def test_get_handler_kwargs_found(self, loop):
+    def test_get_handler_kwargs_found(self, timer):
         expected = TEST_KWARGS
 
-        tmr = Timer(loop)
-        id = tmr.add_handler(TEST_INTERVAL, TEST_FUNC, TEST_ARGS, TEST_KWARGS)
-        actual = tmr.get_handler_kwargs(id)
+        id = timer.add_handler(TEST_INTVL, TEST_FUNC, TEST_ARGS, TEST_KWARGS)
+        actual = timer.get_handler_kwargs(id)
 
         assert actual == expected
 
-    def test_get_handler_kwargs_missing(self, loop):
+    def test_get_handler_kwargs_missing(self, timer):
         expected = None
 
-        tmr = Timer(loop)
         id = '12345'
-        actual = tmr.get_handler_kwargs(id)
+        actual = timer.get_handler_kwargs(id)
 
         assert actual == expected

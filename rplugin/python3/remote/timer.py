@@ -14,7 +14,7 @@ class Timer(object):
 
     def clear(self):
         """Removes all handlers in timer object."""
-        ids = self._handlers.keys()
+        ids = list(self._handlers.keys())
         for id in ids:
             self.remove_handler(id)
 
@@ -37,7 +37,7 @@ class Timer(object):
         :returns: The id of the newly-created handler
         """
         id = str(uuid4())
-        self._handlers[id] = [seconds, handler, *args, *kwargs]
+        self._handlers[id] = [seconds, handler, *args, *kwargs, None]
         self._add_handler(id, seconds, handler, *args, **kwargs)
         return id
 
@@ -57,9 +57,10 @@ class Timer(object):
             yield from asyncio.sleep(seconds)
             try:
                 handler(*args, **kwargs)
-            except Exception:
+            except Exception as ex:
                 self.remove_handler(id)
-            self._add_handler(id, seconds, handler, *args, **kwargs)
+            finally:
+                self._add_handler(id, seconds, handler, *args, **kwargs)
 
         if (id in self._handlers):
             self._loop.create_task(handler_wrapper())
@@ -108,3 +109,14 @@ class Timer(object):
                   invocation, or None if handler is not found
         """
         return self._handlers[id][3] if (id in self._handlers) else None
+
+    def get_handler_exception(self, id):
+        """Returns the exception associated with a handler.
+
+        :param id: The id of the handler
+        :returns: The exception that occurred when invoking the handler,
+                  or None if no exception has occurred or if the handler
+                  is not found
+                  invocation, or None if handler is not found
+        """
+        return self._handlers[id][4] if (id in self._handlers) else None

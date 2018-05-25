@@ -1,6 +1,7 @@
 flake8==3.5.0
 mypy==0.590
 pytest==3.5.1
+pytest-asyncio==0.8.0
 pytest-cov==2.5.1
 pytest-mypy==0.3.1
 vim-vint==0.3.18
