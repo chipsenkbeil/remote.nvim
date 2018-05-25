@@ -18,6 +18,13 @@ class Timer(object):
         for id in ids:
             self.remove_handler(id)
 
+    def has_handler(self, id):
+        """Checks whether or not the timer has a handler with the specified id.
+
+        :returns: True if it has a handler, otherwise False
+        """
+        return id in self._handlers
+
     def add_handler(self, seconds, handler, *args, **kwargs):
         """Adds a new handler to be invoked no earlier than the specified
         number of seconds on an interval.
@@ -30,7 +37,7 @@ class Timer(object):
         :returns: The id of the newly-created handler
         """
         id = str(uuid4())
-        self._handlers[id] = [seconds, handler, args, kwargs]
+        self._handlers[id] = [seconds, handler, *args, *kwargs]
         self._add_handler(id, seconds, handler, *args, **kwargs)
         return id
 
@@ -61,8 +68,10 @@ class Timer(object):
         """Removes the handler with the specified id.
 
         :param id: The id of the handler
+        :returns: True if the handler was removed, otherwise false if no
+                  handler was found
         """
-        self._handlers.pop(id, None)
+        return self._handlers.pop(id, None) is not None
 
     def get_handler_interval(self, id):
         """Returns the interval in seconds at which the handler is invoked.
