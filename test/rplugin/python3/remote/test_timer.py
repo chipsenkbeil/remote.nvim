@@ -8,115 +8,71 @@ import asyncio
 from unittest.mock import Mock
 from remote.timer import Timer
 
-TEST_PAD_TIME = 0.5
-TEST_INTVL = 0.01
+TEST_INTVL = 0.001
 TEST_ARGS = [1, 2, 3]
 TEST_KWARGS = {'arg1': 1, 'arg2': 2}
 
 
-def TEST_FUNC(*args, **kwargs):
-    return None
-
-
 @pytest.fixture()
 def timer(event_loop):
-    tmr = Timer(event_loop)
+    tmr = Timer(event_loop, TEST_INTVL)
     yield tmr
-    tmr.clear()
+    tmr.stop().clear_exceptions()
 
 
 class TestTimer(object):
     @pytest.mark.asyncio
-    async def test_add_handler_timecheck(self, timer):
+    async def test_timecheck(self, timer):
         expected = 3
 
         f = Mock(return_value=None)
-        id = timer.add_handler(TEST_INTVL, f, TEST_ARGS, TEST_KWARGS)
-        await asyncio.sleep(TEST_INTVL * expected + TEST_PAD_TIME)
+        timer.set_handler(f, TEST_ARGS, TEST_KWARGS).start()
+
+        delay = (TEST_INTVL * expected) * 2
+        await asyncio.sleep(delay)
+
         actual = f.call_count
-
-        print('ERROR: ' + str(timer.get_handler_exception(id)))
         assert actual == expected
 
-    def test_add_handler_wrapperexception(self, timer):
-        assert False
+    @pytest.mark.asyncio
+    async def test_exceptions(self, timer):
+        f = Mock(return_value=None)
+        f.side_effect = Exception('Test Failure')
+        timer.set_handler(f, TEST_ARGS, TEST_KWARGS)
 
-    def test_remove_handler_found(self, timer):
-        expected = True
+        assert len(timer.exceptions()) == 0
+        timer.start()
 
-        id = timer.add_handler(TEST_INTVL, TEST_FUNC, TEST_ARGS, TEST_KWARGS)
-        actual = timer.remove_handler(id)
+        await asyncio.sleep(TEST_INTVL)
+        assert len(timer.exceptions()) > 0
+        assert timer.exceptions()[0] == f.side_effect
 
-        assert actual == expected
+    @pytest.mark.asyncio
+    async def test_clear_exceptions(self, timer):
+        f = Mock(return_value=None)
+        f.side_effect = Exception('Test Failure')
+        timer.set_handler(f, TEST_ARGS, TEST_KWARGS).start()
 
-    def test_remove_handler_missing(self, timer):
-        expected = False
+        await asyncio.sleep(TEST_INTVL)
+        assert len(timer.exceptions()) > 0
 
-        id = '12345'
-        actual = timer.remove_handler(id)
+        timer.stop()
+        await asyncio.sleep(TEST_INTVL)
 
-        assert actual == expected
+        timer.clear_exceptions()
+        assert len(timer.exceptions()) == 0
 
-    def test_get_handler_interval_found(self, timer):
-        expected = TEST_INTVL
+    def test_running_true_after_start(self, timer):
+        f = Mock(return_value=None)
+        timer.set_handler(f, TEST_ARGS, TEST_KWARGS).start()
 
-        id = timer.add_handler(TEST_INTVL, TEST_FUNC, TEST_ARGS, TEST_KWARGS)
-        actual = timer.get_handler_interval(id)
+        assert timer.running()
 
-        assert actual == expected
+    def test_running_false_after_stop(self, timer):
+        f = Mock(return_value=None)
+        timer.set_handler(f, TEST_ARGS, TEST_KWARGS).start().stop()
 
-    def test_get_handler_interval_missing(self, timer):
-        expected = None
+        assert not timer.running()
 
-        id = '12345'
-        actual = timer.get_handler_interval(id)
-
-        assert actual == expected
-
-    def test_get_handler_function_found(self, timer):
-        expected = TEST_FUNC
-
-        id = timer.add_handler(TEST_INTVL, TEST_FUNC, TEST_ARGS, TEST_KWARGS)
-        actual = timer.get_handler_function(id)
-
-        assert actual == expected
-
-    def test_get_handler_function_missing(self, timer):
-        expected = None
-
-        id = '12345'
-        actual = timer.get_handler_function(id)
-
-        assert actual == expected
-
-    def test_get_handler_args_found(self, timer):
-        expected = TEST_ARGS
-
-        id = timer.add_handler(TEST_INTVL, TEST_FUNC, TEST_ARGS, TEST_KWARGS)
-        actual = timer.get_handler_args(id)
-
-        assert actual == expected
-
-    def test_get_handler_args_missing(self, timer):
-        expected = None
-
-        id = '12345'
-        actual = timer.get_handler_args(id)
-
-        assert actual == expected
-
-    def test_get_handler_kwargs_found(self, timer):
-        expected = TEST_KWARGS
-
-        id = timer.add_handler(TEST_INTVL, TEST_FUNC, TEST_ARGS, TEST_KWARGS)
-        actual = timer.get_handler_kwargs(id)
-
-        assert actual == expected
-
-    def test_get_handler_kwargs_missing(self, timer):
-        expected = None
-
-        id = '12345'
-        actual = timer.get_handler_kwargs(id)
-
-        assert actual == expected
+    def test_interval(self, timer):
+        assert timer.interval() == TEST_INTVL
